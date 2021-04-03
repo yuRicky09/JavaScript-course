@@ -1,7 +1,7 @@
 // strict mode 嚴謹模式 可以讓我們寫出更靠普、牢固的code
 // 這個模式下 js會阻止我們寫出一些不靠普的code，而且當發生錯誤時會提醒我們
 'use strict';
-
+/*
 function fruitProcessor(apples, oranges) {
   const juice = `Juice with ${apples} apples and ${oranges} oranges.`;
   return juice;
@@ -22,6 +22,7 @@ console.log(num);
 2.陳述式被定義完後就無法從記憶體中刪除，而運算式回隨著執行結束or變數遭刪除後而從記憶體當中刪除
 */
 // Function declaration  函式陳述式
+/*
 function calcAge1(birthYear) {
   return 2037 - birthYear;
 }
@@ -71,3 +72,55 @@ function fruitProcessor(apples, oranges) {
 }
 
 console.log(fruitProcessor(4, 5));
+*/
+
+// Coding Challenge #1
+
+/*
+Back to the two gymnastics teams, the Dolphins and the Koalas! There is a new gymnastics discipline, which works differently.
+Each team competes 3 times, and then the average of the 3 scores is calculated (so one average score per team).
+A team ONLY wins if it has at least DOUBLE the average score of the other team. Otherwise, no team wins!
+
+1. Create an arrow function 'calcAverage' to calculate the average of 3 scores
+2. Use the function to calculate the average for both teams
+3. Create a function 'checkWinner' that takes the average score of each team as parameters ('avgDolhins' and 'avgKoalas'), and then logs the winner to the console, together with the victory points, according to the rule above. Example: "Koalas win (30 vs. 13)".
+4. Use the 'checkWinner' function to determine the winner for both DATA 1 and DATA 2.
+5. Ignore draws this time.
+
+TEST DATA 1: Dolphins score 44, 23 and 71. Koalas score 65, 54 and 49
+TEST DATA 2: Dolphins score 85, 54 and 41. Koalas score 23, 34 and 27
+
+HINT: To calculate average of 3 values, add them all together and divide by 3
+HINT: To check if number A is at least double number B, check for A >= 2 * B. Apply this to the team's average scores 😉
+
+GOOD LUCK 😀
+*/
+
+// const calcAverage = (score1, score2, score3) => {
+//   return (score1 + score2 + score3) / 3;
+// }
+
+const calcAverage = (score1, score2, score3) => (score1 + score2 + score3) / 3;
+
+
+
+let avgDolphins = calcAverage(44, 23, 71);
+let avgKoalas = calcAverage(65, 54, 49);
+
+function checkWinner(avgDolphins, avgKoalas) {
+  if (avgDolphins >= avgKoalas * 2) {
+    console.log(`Dolphins win (${avgDolphins} vs. ${avgKoalas})`);
+  }
+  else if (avgKoalas >= avgDolphins * 2)
+    console.log(`Koalas win (${avgKoalas} vs. ${avgDolphins})`);
+  else
+    console.log(`Nobody win!!`);
+}
+
+checkWinner(avgDolphins, avgKoalas);
+
+
+avgDolphins = calcAverage(85, 54, 41);
+avgKoalas = calcAverage(22, 23, 42);
+
+checkWinner(avgDolphins, avgKoalas);
