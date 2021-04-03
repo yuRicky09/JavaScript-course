@@ -92,25 +92,28 @@ if (bmiMark > bmiJohn) {
 
 // type convertion 類型轉換
 
-const birthYear = 1994
-const age = "26"
-console.log(String(birthYear), birthYear);
-console.log(Number(age), age);
+
+// const birthYear = 1994
+// const age = "26"
+// console.log(String(birthYear), birthYear);
+// console.log(Number(age), age);
 
 
 // type coercion 強制類型轉換
 //在js中  當在做字串與數字的運算時。只有遇到"+"法時，會讓數字轉成字串 變成字串+字串 其他時候都會是字串轉成數字 變成數字跟數字的運算
-console.log("I'm " + 26 + " years old!");  //數字26變成字串'26'
-console.log('26' - '13' - '10');  // 得到數字3
-console.log('25' * '2' - 5); //得到45
-console.log(3 + 6 + 13 + '23'); //得到'2223'
+// console.log("I'm " + 26 + " years old!");  //數字26變成字串'26'
+// console.log('26' - '13' - '10');  // 得到數字3
+// console.log('25' * '2' - 5); //得到45
+// console.log(3 + 6 + 13 + '23'); //得到'2223'
 
-let n = '1' + 1;
-n += 10;
-console.log(n); // n = 1110
+// let n = '1' + 1;
+// n += 10;
+// console.log(n); // n = 1110
 
 
 // 5 falsy values: 0, "", undefined, null, NaN
+
+/*
 
 let abc;
 console.log(Boolean(0));
@@ -135,7 +138,7 @@ if (height) {
   console.log(`You height is un defined!`)
 }
 
-
+*/
 // 比對運算子 == (loose 寬鬆的) vs === (strict 嚴格的)
 // === 完全相等   左右兩邊的值必須連type也是一樣才會得到true 反之則得到false.  == 相較相等 左右兩邊為不同type的值時，js會先強制轉type在進行比較 opsite版本不等於  !=(loose 寬鬆的) vs  !== (strict 嚴格的)
 // prompt 跳出視窗讓使用者輸入並把值(string)存起來
@@ -158,6 +161,10 @@ if (favourite === 23) {
   console.log("why you don't like 23 or 19??")
 } 19
 */
+
+
+/*
+
 
 let dolphinsScore = (96 + 108 + 89) / 3;
 let koakasScore = (88 + 91 + 110) / 3;
@@ -197,3 +204,63 @@ if (dolphinsScore > koakasScore && dolphinsScore >= 100) {
 } else {
   console.log("There is no winner")
 }
+
+
+
+*/
+
+// switch判斷式 多用來判斷1個變數但可能會有多種情況
+
+/*
+const day = 'Thursday';
+
+switch (day) {
+  case "Monday":
+    console.log('Go to coding meetup.');
+    break;
+  case "Tuesday":
+    console.log('Go to jogging');
+    break;
+  case "Wednesday":
+  case "Thursday":
+    console.log('Go to swimning');
+    break;
+  case "Friday":
+    console.log("Just studying");
+    break;
+  default:
+    console.log("Enjoy your weekend ^^")
+    break;
+}
+
+
+if (day === "Monday") {
+  console.log("Today is Monday")
+} else if (day === "Tuesday") {
+  console.log("Today is Tuesday")
+} else if (day === "Wednesday" || "Thursday") {
+  console.log("Today is Wednesday ")
+} else {
+  console.log("Enjoy your weekend^^")
+}
+
+*/
+
+// 三源運算子  條件句+?  true時執行的程式 : false時執行的程式
+
+const age = 18;
+age >= 18 ? console.log(`I like to drink wine🍷!`) : console.log(`I like to drink water🥛`);
+
+// 下面的3元運算子會得到一個值 因此可以直接前面命名一個變數讓值帶入
+
+const drink = age >= 18 ? 'wine🍷' : 'water🥛';
+console.log(drink);
+
+
+
+const bill = 275;
+const tip = bill >= 50 && bill <= 300 ? bill * 0.15 : bill * 0.2;
+const totalValue = bill + tip;
+console.log(`The bill was ${bill}, the tip was ${tip}, and the total value was ${totalValue}.`);
+
+
