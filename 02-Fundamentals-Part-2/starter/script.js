@@ -100,6 +100,7 @@ GOOD LUCK 😀
 //   return (score1 + score2 + score3) / 3;
 // }
 
+/*
 const calcAverage = (score1, score2, score3) => (score1 + score2 + score3) / 3;
 
 
@@ -124,3 +125,34 @@ avgDolphins = calcAverage(85, 54, 41);
 avgKoalas = calcAverage(22, 23, 42);
 
 checkWinner(avgDolphins, avgKoalas);
+
+*/
+
+// 學習Array
+
+
+const friends = ['Yu', 'Jack', 'Leo'];
+
+console.log(friends[0], friends[2]);
+
+console.log(friends.length);
+console.log(friends[friends.length - 1]);
+
+friends[2] = 'Jay';
+console.log(friends);
+
+const calcAge = function (birthYear) {
+  return 2037 - birthYear;
+}
+
+const years = [1994, 2005, 1997, 2002, 2007];
+
+const age1 = calcAge(years[0]);
+const age2 = calcAge(years[3]);
+const age3 = calcAge(years[years.length - 1]);
+
+const ages = [age1, age2, age3];
+console.log(ages);
+
+
+// array method
