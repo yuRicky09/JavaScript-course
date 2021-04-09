@@ -129,7 +129,7 @@ checkWinner(avgDolphins, avgKoalas);
 */
 
 // 學習Array
-
+/*
 
 const friends = ['Yu', 'Jack', 'Leo'];
 
@@ -152,7 +152,178 @@ const age2 = calcAge(years[3]);
 const age3 = calcAge(years[years.length - 1]);
 
 const ages = [age1, age2, age3];
-console.log(ages);
+console.log(ages); 
 
-
+*/
 // array method
+
+// Add elements
+
+const friends = ['Yu', 'Jack', 'Leo'];
+
+// 最後面加1個元素
+friends.push('Kitty');
+console.log(friends);
+
+// 最前面加1個元素
+friends.unshift('John');
+
+
+//  Remove element
+
+// 移最後一個
+friends.pop();
+console.log(friends);
+
+// 如果想要捕捉移掉的元素 就命名一個變數來存取
+
+const poped = friends.pop();
+console.log(poped);
+console.log(friends);
+
+// 移最前一個
+friends.shift();
+console.log(friends);
+
+// 查詢元素位置
+// 當沒查到時會回傳-1
+console.log(friends.indexOf('Yu'));
+
+// ES6新增的方法 includes() 用來查詢資料內是否有該元素 會回傳布林值
+
+console.log(friends.includes('Yu'));
+console.log(friends.includes('12'));
+
+friends.push('Ricky');
+
+if (friends.includes('Ricky')) {
+  console.log(`You have a friend called Ricky`);
+}
+
+// Coding Challenge #2
+
+/*
+Steven is still building his tip calculator, using the same rules as before: Tip 15% of the bill if the bill value is between 50 and 300, and if the value is different, the tip is 20%.
+
+1. Write a function 'calcTip' that takes any bill value as an input and returns the corresponding tip, calculated based on the rules above (you can check out the code from first tip calculator challenge if you need to). Use the function type you like the most. Test the function using a bill value of 100.
+2. And now let's use arrays! So create an array 'bills' containing the test data below.
+3. Create an array 'tips' containing the tip value for each bill, calculated from the function you created before.
+4. BONUS: Create an array 'total' containing the total values, so the bill + tip.
+
+TEST DATA: 125, 555 and 44
+
+HINT: Remember that an array needs a value in each position, and that value can actually be the returned value of a function! So you can just call a function as array values (so don't store the tip values in separate variables first, but right in the new array) 😉
+
+GOOD LUCK 😀
+*/
+
+/*
+function calcTip(bill) {
+  if (bill >= 50 && bill <= 300) {
+    return bill * 0.15;
+  } else
+    return bill * 0.2;
+}
+*/
+//  用三元運算
+// const calcTip = function (bill) {
+//   return bill >= 50 && bill <= 300 ? bill * 0.15 : bill * 0.2;
+// }
+
+// arrow function    
+//  const calcTip = (bill) => bill >= 50 && bill <= 300 ? bill * 0.15 : bill * 0.2;
+
+
+/*
+const bills = [125, 555, 44];
+const tip1 = calcTip(125);
+const tip2 = calcTip(555);
+const tip3 = calcTip(44);
+
+const tips = [tip1, tip2, tip3]
+console.log(tips);
+*/
+
+// 上面的寫法會要多定義很多變數 不推
+// const bills = [125, 555, 44];
+// const tips = [calcTip(bills[0]), calcTip(bills[1]), calcTip(bills[2])];
+
+// console.log(bills, tips);
+// const total = [bills[0] + tips[0], bills[1] + tips[1], bills[2] + tips[2]];
+// console.log(total);
+
+/*
+
+//  object
+
+const yu = {
+  firstName: 'Yu',
+  lastName: 'HSU',
+  age: 2037-2011,
+  job: 'teacher',
+  friends: ['Jack', 'Peter', 'Steven']
+}
+//  object 與 array 最大不同在於 object不在意元素排列的順序 他是用key去取值
+
+// object有兩種取值方始   .的話必須是object確實存在的屬性才能取到後面的值 []的話可以用透過expression得到的值來取
+console.log(yu.firstName);
+console.log(yu['lastName']);
+
+const nameKey = 'Name';
+
+console.log(yu['first' + nameKey]);
+console.log(yu[`first${nameKey}`]);
+
+
+//  prompt 可以跳出視窗讓使用者輸入內容並且可把輸入的內容存到變數裡
+
+const interestedIn = prompt(`What do you want to know about YU? Choose between firstname........others`)
+
+//console.log(yu.interestedIn); // undefined
+// console.log(yu[interestedIn]); // teacher
+
+
+// if (yu[interestedIn]) {
+//   console.log(yu[interestedIn]);
+// }else {
+//   console.log(`Wrong request!`)
+// }0
+console.log(`${yu.firstName} has ${yu.friends.length} friends, and his best friend is called ${yu.friends[0]}`
+);
+*/
+
+
+const yu = {
+  firstName: 'Yu',
+  lastName: 'HSU',
+  birthYear: 1994,
+  job: 'teacher',
+  friends: ['Jack', 'Peter', 'Steven'],
+  hasDriverLicense: true,
+  
+  // calcAge: function (birthYear) {
+  //   return 2037 - birthYear;
+  // }
+  
+  // calcAge: function() {
+  //   return 2037 - this.birthYear;
+  // }
+
+  calcAge: function() {
+    this.age = 2037 - this.birthYear;
+    return this.age
+  },
+
+  getSummary: function() {
+    return `${this.firstName} is a ${this.calcAge()} year old teacher,and he has ${yu.hasDriverLicense ? 'a': 'no'} driver's license.`
+  }
+}
+
+
+console.log(yu.calcAge());
+// console.log(yu['calcAge'](yu.birthYear));
+console.log(yu.age);
+
+// challenge
+
+console.log(yu.getSummary())
