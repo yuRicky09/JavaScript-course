@@ -377,3 +377,40 @@ if (mark.calcBMI() > john.calcBMI()) {
 for (let rep = 1; rep <= 10; rep++) {
   console.log(`Lifting weights repetition ${rep}🧱`)
 }
+
+
+//  用for迴圈跑array
+
+const Yuu = [
+  'hsu yu',
+  26,
+  true,
+  [1,3,5],
+  'hey'
+];
+
+const typeOfArray = []
+for (let i = 0; i < Yuu.length; i++ ) {
+  console.log(Yuu[i], typeof Yuu[i]);
+  typeOfArray.push(typeof Yuu[i]);
+
+}
+
+console.log(typeOfArray);
+
+//  loop的兩個statemant  continue and break
+//  continue 當符合??時 就跳過這是迭代直接執行下次
+//  break  當符合??時  就直接結束迴圈
+
+
+// 只想印出字串
+for (let i = 0; i < Yuu.length; i++ ) {
+  if (typeof Yuu[i] !== 'string') continue;
+  console.log(Yuu[i], typeof Yuu[i]);
+}
+
+//  當遇到數字後就停止迴圈
+for (let i = 0; i < Yuu.length; i++ ) {
+  if (typeof Yuu[i] == 'number') break;
+  console.log(Yuu[i], typeof Yuu[i]);
+}
