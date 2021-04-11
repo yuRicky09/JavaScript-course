@@ -14,5 +14,11 @@ console.log(document.querySelector('.guess').value);
 //  function也可以是一個value 只要它是function expression
 
 document.querySelector('.check').addEventListener('click', function () {
-  console.log(document.querySelector('.guess').value);
+  const guess = Number(document.querySelector('.guess').value);
+  console.log(guess, typeof guess);
+
+  // 這邊用!為了當user輸入0時(在JS 0 === false),會把false轉成true 這樣才能跑後面那段
+  if (!guess) {
+    document.querySelector('.message').textContent = '☠Not number';
+  }
 });
