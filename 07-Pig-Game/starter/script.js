@@ -11,16 +11,27 @@ const diceEl = document.querySelector('.dice');
 const btnNew = document.querySelector('.btn--new');
 const btnRoll = document.querySelector('.btn--roll');
 const btnHold = document.querySelector('.btn--hold');
-
 // Starting conditions 設定遊戲初始狀態
-score0El.textContent = 0;
-score1El.textContent = 0;
-diceEl.classList.add('hidden');
 // 不能宣告在事件function內 不然每點擊一次就會歸零
-let currentScore = 0;
-let activePlayer = 0;
-let score = [0, 0];
+let currentScore, activePlayer, score, playing;
 
+const init = function () {
+  player0El.classList.remove('player--winner');
+  player1El.classList.remove('player--winner');
+  player0El.classList.add('player--active');
+  player1El.classList.remove('player--active');
+  score0El.textContent = 0;
+  score1El.textContent = 0;
+  current0El.textContent = 0;
+  current1El.textContent = 0;
+  activePlayer = 0;
+  score = [0, 0];
+  currentScore = 0;
+  playing = true;
+  diceEl.classList.add('hidden');
+};
+
+init();
 // switch player
 const switchPlayer = function () {
   // switch play and reset currentScore to 0;
@@ -39,33 +50,52 @@ const switchPlayer = function () {
 
 // Rolling dice functionality  執行甩骰
 btnRoll.addEventListener('click', function () {
-  // 點時，要產生一個隨機1~6的數字
-  const dice = Math.trunc(Math.random() * 6) + 1;
-  console.log(dice);
-  // 點時，把原先hidden的圖片秀出來
-  diceEl.classList.remove('hidden');
-  // 按照對應的隨機數字顯示相對應的圖片  .src method 可以讓我們為有src屬性的標籤建立他的src值
-  diceEl.src = `dice-${dice}.png`;
+  if (playing) {
+    // 點時，要產生一個隨機1~6的數字
+    const dice = Math.trunc(Math.random() * 6) + 1;
+    console.log(dice);
+    // 點時，把原先hidden的圖片秀出來
+    diceEl.classList.remove('hidden');
+    // 按照對應的隨機數字顯示相對應的圖片  .src method 可以讓我們為有src屬性的標籤建立他的src值
+    diceEl.src = `dice-${dice}.png`;
 
-  // 3. check for rolled 1 當甩到1時
-  if (dice !== 1) {
-    currentScore += dice;
-    // 改用變數帶入 讓我們能隨時依據現在玩家是誰來決定加到誰的現在得分
-    document.getElementById(
-      `current--${activePlayer}`
-    ).textContent = currentScore;
-    // current0El.textContent = currentScore;
-  } else {
-    switchPlayer();
+    // 3. check for rolled 1 當甩到1時
+    if (dice !== 1) {
+      currentScore += dice;
+      // 改用變數帶入 讓我們能隨時依據現在玩家是誰來決定加到誰的現在得分
+      document.getElementById(
+        `current--${activePlayer}`
+      ).textContent = currentScore;
+      // current0El.textContent = currentScore;
+    } else {
+      switchPlayer();
+    }
   }
 });
 
 btnHold.addEventListener('click', function () {
-  //  當點選時能儲存現在得分到得分
-  score[activePlayer] += currentScore;
-  //  並且把得分秀出
-  document.querySelector(`#score--${activePlayer}`).textContent =
-    score[activePlayer];
-  // 並且換成下一個玩家
-  switchPlayer();
+  if (playing) {
+    //  當點選時能儲存現在得分到得分
+    score[activePlayer] += currentScore;
+    //  並且把得分秀出
+    document.querySelector(`#score--${activePlayer}`).textContent =
+      score[activePlayer];
+
+    //  判斷按下hold時有無達成勝利條件
+    if (score[activePlayer] >= 20) {
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.add('player--winner');
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.remove('player--active');
+      playing = false;
+      diceEl.classList.add('hidden');
+    } else {
+      // 並且換成下一個玩家
+      switchPlayer();
+    }
+  }
 });
+
+btnNew.addEventListener('click', init);
