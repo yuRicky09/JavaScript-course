@@ -14,14 +14,36 @@
 // console.log(map1);
 // // expected output: Array [2, 8, 18, 32]
 
-const array = [0, 1];
+// const array = [0, 1];
 
-function fib(n) {
-  for (i = 2; i < n; i++) {
-    const a = array[i - 1];
-    const b = array[i - 2];
-    array.push(a + b);
-    console.log(array);
-  }
-}
-fib(8);
+// function fib(n) {
+//   for (i = 2; i < n; i++) {
+//     const a = array[i - 1];
+//     const b = array[i - 2];
+//     array.push(a + b);
+//     console.log(array);
+//   }
+// }
+// fib(8);
+
+// var foo = function () {
+//   this.count++;
+// };
+
+// console.log((foo.count = 0));
+
+// for (var i = 0; i < 5; i++) {
+//   foo();
+// }
+
+// function fib(n) {
+//   let [prev, current] = [0, 1];
+
+//   while (current <= n) {
+//     [prev, current] = [current, prev + current];
+//   }
+
+//   return [prev, current];
+// }
+
+// console.log(fib(10));
