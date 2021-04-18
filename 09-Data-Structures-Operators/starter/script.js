@@ -426,3 +426,34 @@ for (const player of game.scored) {
   scorers[player] ? scorers[player]++ : (scorers[player] = 1);
 }
 console.log(scorers);
+
+//Set 後面帶可迭代的元素   回傳的set結構資料的值只會是唯一值不會重複(duplicate)
+const orderSet = new Set([
+  'pizza',
+  'suhsi',
+  'pasta',
+  'pizza',
+  'applepie',
+  'suhsi',
+]);
+console.log(orderSet); //=> Set(4) {"pizza", "suhsi", "pasta", "applepie"}
+console.log(orderSet.size);
+console.log(orderSet.has('pizza')); // true
+console.log(orderSet.has('bread')); // false
+orderSet.add('bread');
+orderSet.delete('shusi');
+console.log(orderSet);
+// orderSet.clear();
+console.log(new Set('yuricky')); //Set(6) {"y", "u", "r", "i", "c", …}
+
+// Set沒有index值 不能用index值取回值
+// 因為Set結構資料的用意只在於想知道這個元素有沒有在這集合裡，他的順序 能不能取回根本不重要
+
+for (const order of orderSet) console.log(order);
+
+// Set最常使用在想去除array裡重複的資料
+const staff = ['Waiter', 'Chef', 'Manager', 'Chef', 'Manager'];
+
+//  想把set轉成array
+const staffUnique = [...new Set(staff)];
+console.log(staffUnique);
