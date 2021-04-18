@@ -457,3 +457,38 @@ const staff = ['Waiter', 'Chef', 'Manager', 'Chef', 'Manager'];
 //  想把set轉成array
 const staffUnique = [...new Set(staff)];
 console.log(staffUnique);
+
+// Map
+
+const rest = new Map();
+rest.set('name', 'Classico Italiano');
+rest.set(1, 'Firenze, Italy');
+// set方法不但能update還能同時回傳update後的map回來 所以可以用下面這寫法不斷加鍵值對
+rest
+  .set('categories', ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'])
+  .set('open', 11)
+  .set('close', 23)
+  .set(true, 'We are open')
+  .set(false, 'We are closed');
+
+console.log(rest.get('name'));
+console.log(rest.get(1));
+console.log(rest.get(true));
+
+const time = 21;
+console.log(rest.get(time < rest.get('close') && time > rest.get('open')));
+console.log(rest.has('open'));
+rest.delete(2);
+// rest.clear();
+
+// rest.set([1, 2], 'test');
+// console.log(rest.get([1, 2])); // undefined
+// 這是因為其實這兩個陣列是完全不同的物件存放在heap記憶體裡
+
+// 而變數則是會存放在 call stack 現在這個[1 ,2]物件就會參照變數去找到他
+const arr = [1, 2];
+rest.set(arr, 'test');
+console.log(rest.get(arr));
+
+rest.set(document.querySelector('h1'), 'heading');
+console.log(rest);
