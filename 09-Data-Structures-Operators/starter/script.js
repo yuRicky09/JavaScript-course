@@ -158,7 +158,7 @@ TEST DATA FOR 6: Use players 'Davies', 'Muller', 'Lewandowski' and 'Kimmich'. Th
 
 GOOD LUCK 😀
 */
-
+/*
 const game = {
   team1: 'Bayern Munich',
   team2: 'Borrussia Dortmund',
@@ -227,3 +227,202 @@ game.printGoals(game.scored);
 // console.log(team1 < team2);
 
 team1 < team2 && console.log(`Team1 is more likely to win`);
+
+*/
+
+const openingHours = {
+  thu: {
+    open: 12,
+    close: 22,
+  },
+  fri: {
+    open: 11,
+    close: 23,
+  },
+  sat: {
+    open: 0, // Open 24 hours
+    close: 24,
+  },
+};
+
+const restaurant = {
+  name: 'Classico Italiano',
+  location: 'Via Angelo Tavanti 23, Firenze, Italy',
+  categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+  starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+  mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+
+  order: function (starertIndex, mainIndex) {
+    return [this.starterMenu[starertIndex], this.mainMenu[mainIndex]];
+  },
+
+  openingHours,
+
+  orderDelivery: function ({
+    starertIndex,
+    mainIndex,
+    time = '20:00',
+    address,
+  }) {
+    console.log(
+      `Order received! ${this.starterMenu[starertIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}`
+    );
+  },
+};
+
+//  用間接方法去跑object迴圈
+// 使用Object.days(要取得的物件key)得到一個array裡面都是object的key元素
+const properties = Object.keys(openingHours);
+console.log(properties); // => ['thu', 'fri', 'sat'];
+
+let openStr = `We are open on ${properties.length} days: `;
+
+for (const day of properties) {
+  openStr += `${day}, `;
+}
+console.log(openStr);
+
+//  使用Object.values
+const values = Object.values(openingHours);
+console.log(values);
+// 使用Object.entries
+
+const entries = Object.entries(openingHours);
+console.log(entries);
+
+for (const [day, { open, close }] of entries) {
+  console.log(`On ${day}, We will open at ${open} and close at ${close}.`);
+}
+
+// 使用解構附值 讓兩個陣列的內容合併成一個新的陣列
+// const menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
+
+//  for迴圈 與for of迴圈
+// for of迴圈可以不用讓我們像以往一樣要設conter的初始值 狀況等 寫起來較簡單
+// before
+// for (let i = 0; i < menu.length; i++) {
+//   console.log(menu[i]);
+// }
+// after  結果會是一樣的
+// for (const item of menu) console.log(item);
+
+// 如果同時想要索引值時
+// .entries() 可以回傳每個要迭帶的陣列內元素的索引+值形成一個新的陣列[index, value]
+// for (const item of menu.entries()) console.log(item);
+// [0, "Focaccia"]
+// [1, "Bruschetta"]
+// [2, "Garlic Bread"]
+// [3, "Caprese Salad"]
+// [4, "Pizza"]
+// [5, "Pasta"]
+// [6, "Risotto"]
+
+//  盡然我們知道 .entries會回傳給我們一個陣列[index, value] 那我們就一樣能解構來取值
+// for (const [i, el] of menu.entries()) {
+//   console.log(`${i + 1}: ${el}`);
+// }
+// 1: Focaccia
+// 2: Bruschetta
+// 3: Garlic Bread
+// 4: Caprese Salad
+// 5: Pizza
+// 6: Pasta
+// 7: Risotto
+
+// Coding Challenge #2
+
+/* 
+Let's continue with our football betting app!
+
+1. Loop over the game.scored array and print each player name to the console, along with the goal number (Example: "Goal 1: Lewandowski")
+2. Use a loop to calculate the average odd and log it to the console (We already studied how to calculate averages, you can go check if you don't remember)
+3. Print the 3 odds to the console, but in a nice formatted way, exaclty like this:
+      Odd of victory Bayern Munich: 1.33
+      Odd of draw: 3.25
+      Odd of victory Borrussia Dortmund: 6.5
+Get the team names directly from the game object, don't hardcode them (except for "draw"). HINT: Note how the odds and the game objects have the same property names 😉
+
+BONUS: Create an object called 'scorers' which contains the names of the players who scored as properties, and the number of goals as the value. In this game, it will look like this:
+      {
+        Gnarby: 1,
+        Hummels: 1,
+        Lewandowski: 2
+      }
+
+GOOD LUCK 😀
+*/
+
+const game = {
+  team1: 'Bayern Munich',
+  team2: 'Borrussia Dortmund',
+  players: [
+    [
+      'Neuer',
+      'Pavard',
+      'Martinez',
+      'Alaba',
+      'Davies',
+      'Kimmich',
+      'Goretzka',
+      'Coman',
+      'Muller',
+      'Gnarby',
+      'Lewandowski',
+    ],
+    [
+      'Burki',
+      'Schulz',
+      'Hummels',
+      'Akanji',
+      'Hakimi',
+      'Weigl',
+      'Witsel',
+      'Hazard',
+      'Brandt',
+      'Sancho',
+      'Gotze',
+    ],
+  ],
+  score: '4:0',
+  scored: ['Lewandowski', 'Gnarby', 'Lewandowski', 'Hummels'],
+  date: 'Nov 9th, 2037',
+  odds: {
+    team1: 1.33,
+    x: 3.25,
+    team2: 6.5,
+  },
+};
+// 1.
+for (const [index, playerName] of game.scored.entries()) {
+  console.log(`Goal ${index + 1}: ${playerName}`);
+}
+
+//2.
+
+function calcAverage() {
+  let totalOdds = 0;
+  for (const odds of Object.values(game.odds)) {
+    totalOdds += odds;
+  }
+  return totalOdds / Object.values(game.odds).length;
+}
+console.log(calcAverage());
+
+//3.
+for (const [winTeam, odds] of Object.entries(game.odds)) {
+  // if ('team1' === winTeam) {
+  //   console.log(`Odd of victory ${game.team1}: ${odds}`);
+  // } else if ('team2' === winTeam) {
+  //   console.log(` Odd of victory ${game.team2}: ${odds}`);
+  // } else console.log(`Odd of draw: ${odds}`);
+  // console.log(winTeam, odds);
+  const teamStr = winTeam === 'x' ? 'draw' : `victory ${game[winTeam]}`;
+  console.log(`Odd of ${teamStr}: ${odds}`);
+}
+// const scorers = {};
+const scorers = {};
+for (const player of game.scored) {
+  console.log(player);
+  scorers[player] ? scorers[player]++ : (scorers[player] = 1);
+}
+console.log(scorers);
