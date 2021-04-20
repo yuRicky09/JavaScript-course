@@ -393,92 +393,92 @@ const game = {
   },
 };
 // 1.
-for (const [index, playerName] of game.scored.entries()) {
-  console.log(`Goal ${index + 1}: ${playerName}`);
-}
+// for (const [index, playerName] of game.scored.entries()) {
+//   console.log(`Goal ${index + 1}: ${playerName}`);
+// }
 
 //2.
 
-function calcAverage() {
-  let totalOdds = 0;
-  for (const odds of Object.values(game.odds)) {
-    totalOdds += odds;
-  }
-  return totalOdds / Object.values(game.odds).length;
-}
-console.log(calcAverage());
+// function calcAverage() {
+//   let totalOdds = 0;
+//   for (const odds of Object.values(game.odds)) {
+//     totalOdds += odds;
+//   }
+//   return totalOdds / Object.values(game.odds).length;
+// }
+// console.log(calcAverage());
 
 //3.
-for (const [winTeam, odds] of Object.entries(game.odds)) {
-  // if ('team1' === winTeam) {
-  //   console.log(`Odd of victory ${game.team1}: ${odds}`);
-  // } else if ('team2' === winTeam) {
-  //   console.log(` Odd of victory ${game.team2}: ${odds}`);
-  // } else console.log(`Odd of draw: ${odds}`);
-  // console.log(winTeam, odds);
-  const teamStr = winTeam === 'x' ? 'draw' : `victory ${game[winTeam]}`;
-  console.log(`Odd of ${teamStr}: ${odds}`);
-}
+// for (const [winTeam, odds] of Object.entries(game.odds)) {
+// if ('team1' === winTeam) {
+//   console.log(`Odd of victory ${game.team1}: ${odds}`);
+// } else if ('team2' === winTeam) {
+//   console.log(` Odd of victory ${game.team2}: ${odds}`);
+// } else console.log(`Odd of draw: ${odds}`);
+// console.log(winTeam, odds);
+//   const teamStr = winTeam === 'x' ? 'draw' : `victory ${game[winTeam]}`;
+//   console.log(`Odd of ${teamStr}: ${odds}`);
+// }
 // const scorers = {};
-const scorers = {};
-for (const player of game.scored) {
-  console.log(player);
-  scorers[player] ? scorers[player]++ : (scorers[player] = 1);
-}
-console.log(scorers);
+// const scorers = {};
+// for (const player of game.scored) {
+//   console.log(player);
+//   scorers[player] ? scorers[player]++ : (scorers[player] = 1);
+// }
+// console.log(scorers);
 
 //Set 後面帶可迭代的元素   回傳的set結構資料的值只會是唯一值不會重複(duplicate)
-const orderSet = new Set([
-  'pizza',
-  'suhsi',
-  'pasta',
-  'pizza',
-  'applepie',
-  'suhsi',
-]);
-console.log(orderSet); //=> Set(4) {"pizza", "suhsi", "pasta", "applepie"}
-console.log(orderSet.size);
-console.log(orderSet.has('pizza')); // true
-console.log(orderSet.has('bread')); // false
-orderSet.add('bread');
-orderSet.delete('shusi');
-console.log(orderSet);
-// orderSet.clear();
-console.log(new Set('yuricky')); //Set(6) {"y", "u", "r", "i", "c", …}
+// const orderSet = new Set([
+//   'pizza',
+//   'suhsi',
+//   'pasta',
+//   'pizza',
+//   'applepie',
+//   'suhsi',
+// ]);
+// console.log(orderSet); //=> Set(4) {"pizza", "suhsi", "pasta", "applepie"}
+// console.log(orderSet.size);
+// console.log(orderSet.has('pizza')); // true
+// console.log(orderSet.has('bread')); // false
+// orderSet.add('bread');
+// orderSet.delete('shusi');
+// console.log(orderSet);
+// // orderSet.clear();
+// console.log(new Set('yuricky')); //Set(6) {"y", "u", "r", "i", "c", …}
 
 // Set沒有index值 不能用index值取回值
 // 因為Set結構資料的用意只在於想知道這個元素有沒有在這集合裡，他的順序 能不能取回根本不重要
 
-for (const order of orderSet) console.log(order);
+// for (const order of orderSet) console.log(order);
 
 // Set最常使用在想去除array裡重複的資料
-const staff = ['Waiter', 'Chef', 'Manager', 'Chef', 'Manager'];
+// const staff = ['Waiter', 'Chef', 'Manager', 'Chef', 'Manager'];
 
 //  想把set轉成array
-const staffUnique = [...new Set(staff)];
-console.log(staffUnique);
+// const staffUnique = [...new Set(staff)];
+// console.log(staffUnique);
 
 // Map
 
-const rest = new Map();
-rest.set('name', 'Classico Italiano');
-rest.set(1, 'Firenze, Italy');
+// const rest = new Map();
+// rest.set('name', 'Classico Italiano');
+// rest.set(1, 'Firenze, Italy');
 // set方法不但能update還能同時回傳update後的map回來 所以可以用下面這寫法不斷加鍵值對
-rest
-  .set('categories', ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'])
-  .set('open', 11)
-  .set('close', 23)
-  .set(true, 'We are open')
-  .set(false, 'We are closed');
+// rest
+//   .set('categories', ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'])
+//   .set('open', 11)
+//   .set('close', 23)
+//   .set(true, 'We are open')
+//   .set(false, 'We are closed');
 
-console.log(rest.get('name'));
-console.log(rest.get(1));
-console.log(rest.get(true));
+// console.log(rest.get('name'));
+// console.log(rest.get(1));
+// console.log(rest.get(true));
 
-const time = 21;
-console.log(rest.get(time < rest.get('close') && time > rest.get('open')));
-console.log(rest.has('open'));
-rest.delete(2);
+// const time = 21;
+// console.log(rest.get(time < rest.get('close') && time > rest.get('open')));
+// console.log(rest.has('open'));
+// rest.delete(2);
 // rest.clear();
 
 // rest.set([1, 2], 'test');
@@ -486,52 +486,52 @@ rest.delete(2);
 // 這是因為其實這兩個陣列是完全不同的物件存放在heap記憶體裡
 
 // 而變數則是會存放在 call stack 現在這個[1 ,2]物件就會參照變數去找到他
-const arr = [1, 2];
-rest.set(arr, 'test');
-console.log(rest.get(arr));
+// const arr = [1, 2];
+// rest.set(arr, 'test');
+// console.log(rest.get(arr));
 
-rest.set(document.querySelector('h1'), 'heading');
-console.log(rest);
+// rest.set(document.querySelector('h1'), 'heading');
+// console.log(rest);
 
-//  另一種建立Map的方式 [[鍵, 值], [鍵, 值]..........]
+// //  另一種建立Map的方式 [[鍵, 值], [鍵, 值]..........]
 
-const question = new Map([
-  ['question', 'What is the best programming language in the world?'],
-  [1, 'C'],
-  [2, 'Java'],
-  [3, 'JavaScript'],
-  ['correct', 3],
-  [true, 'Correct'],
-  [false, 'Try again!'],
-]);
+// const question = new Map([
+//   ['question', 'What is the best programming language in the world?'],
+//   [1, 'C'],
+//   [2, 'Java'],
+//   [3, 'JavaScript'],
+//   ['correct', 3],
+//   [true, 'Correct'],
+//   [false, 'Try again!'],
+// ]);
 
-console.log(question);
+// console.log(question);
 
 // Convert object to map
 // 因為.entries這個method會產生一個新陣列並且在裡面把object的每個key value對轉成一個個陣列
 // 這完全就是建立Map的寫法
-console.log(Object.entries(openingHours));
-const hoursMap = new Map(Object.entries(openingHours));
-console.log(hoursMap);
+// console.log(Object.entries(openingHours));
+// const hoursMap = new Map(Object.entries(openingHours));
+// console.log(hoursMap);
 
 //  Map 也可以迭帶
 // Quiz app
-console.log(question.get('question'));
+// console.log(question.get('question'));
 
-for (const [key, value] of question) {
-  if (typeof key === 'number') console.log(`Answer ${key}: ${value}`);
-}
+// for (const [key, value] of question) {
+//   if (typeof key === 'number') console.log(`Answer ${key}: ${value}`);
+// }
 
 // const answer = Number(prompt('Your answer'));
-const answer = 3;
-question.get('correct') === 3
-  ? console.log(question.get(true))
-  : console.log(question.get(false));
+// const answer = 3;
+// question.get('correct') === 3
+//   ? console.log(question.get(true))
+//   : console.log(question.get(false));
 
 // convert map to object
-console.log([...question]);
-console.log([...question.keys()]);
-console.log([...question.values()]);
+// console.log([...question]);
+// console.log([...question.keys()]);
+// console.log([...question.values()]);
 
 // Coding Challenge #3
 
@@ -546,7 +546,7 @@ Let's continue with our football betting app! This time, we have a map with a lo
 
 GOOD LUCK 😀
 */
-
+/*
 const gameEvents = new Map([
   [17, '⚽️ GOAL'],
   [36, '🔁 Substitution'],
@@ -590,3 +590,124 @@ for (const [min, event] of gameEvents) {
   const half = min < 45 ? 'FIRST' : 'SECOND';
   console.log(`${half} HALF ${min}: ${event}`);
 }
+*/
+
+// ------------ String
+
+const airline = 'TAP Air Portugal';
+const plane = 'A320';
+// 字串也可以用索引值
+console.log(plane[0]);
+console.log(plane[1]);
+console.log(plane[2]);
+console.log('B737'[0]); // 也可以不存變數直接用
+
+console.log(airline.length);
+console.log('B737'.length);
+
+console.log(airline.indexOf('r')); // 查找參數的索引位置
+console.log(airline.lastIndexOf('r'));
+
+// slice(起始索引, 結束索引)  提取
+// 結束索引可選填，沒填時會自動從起始提取到最後
+console.log(airline.slice(4));
+console.log(airline.slice(4, 7)); //切記他是提取到結束索引-1 實際提出4,5,6這三個索引值
+
+// slice的索引值參數常搭配indexof使用
+
+console.log(airline.slice(0, airline.indexOf(' '))); //提第一個單字
+console.log(airline.slice(airline.lastIndexOf(' ') + 1)); // 提最後一個單字
+
+console.log(airline.slice(-2)); // 也可從最後往前
+
+// const checkMiddleSeat = function (seat) {
+//   // B and E are middle seat
+//   const c = seat.slice(-1);
+//   if (c === 'B' || c === 'D') {
+//     console.log('You got the middle seat!😅');
+//   } else {
+//     console.log('You got lucky 😁');
+//   }
+// };
+
+// checkMiddleSeat('11B');
+// checkMiddleSeat('14C');
+// checkMiddleSeat('8D');
+
+// Fix capitalization in name
+// toLowerCase  toUpCase
+const passenger = 'jOnAs'; // how to be Jonas?
+const passengerLower = passenger.toLowerCase();
+const passengerCorrect = passenger[0].toUpperCase() + passengerLower.slice(1);
+console.log(passengerCorrect);
+// .trim()  修剪 去掉字串兩邊的空白or換行字元
+const text = '   hello world!    ';
+console.log(text.trim());
+
+// replace(要替換的字母or字串,要替換成的字母or字串)
+// 只會替換第一個遇到的 只後才會出replaceAll的method
+const announcement =
+  'All passengers come to boarding door 23. Boarding door 23!';
+console.log(announcement.replace('door', 'gate'));
+// 替換全部
+console.log(announcement.replace(/door/g, 'gate'));
+
+// 會回傳布林值的字串方法 .include()  .startsWith .endWith
+
+const fruit = 'apple';
+console.log(fruit.includes('p'));
+console.log(fruit.startsWith('pp'));
+console.log(fruit.endsWith('le'));
+
+// split join 重要!!!!
+console.log('Hey leo'.split(' '));
+
+// split切出來後會得到一個陣列 所以可以運用解構附值
+const [firstName, lastName] = 'HSU YU'.split(' ');
+console.log(firstName, lastName);
+
+const newName = ['Mr.', firstName, lastName].join(' ');
+console.log(newName);
+
+const capitalizeName = function (name) {
+  const names = name.split(' ');
+  const nameUpper = [];
+  for (const n of names) {
+    // nameUpper.push(n[0].toUpperCase() + n.slice(1));
+    nameUpper.push(n.replace(n[0], n[0].toUpperCase()));
+  }
+  console.log(nameUpper.join(' '));
+};
+
+capitalizeName('ann ricky jack toms');
+
+// padding  用??字串來填滿內距
+
+const message = 'Go to gate 23';
+console.log(message.padStart(20, '+').padEnd(30, '+'));
+// => +++++++Go to gate 23++++++++++  length 30
+
+// 常用來做魏姓用卡號碼上碼
+const maskCreditCard = function (number) {
+  const str = number + ''; // 將數字轉成字串的小技巧
+  const last = str.slice(-4);
+  const maskstr = last.padStart(str.length, '*');
+  console.log(maskstr);
+};
+
+maskCreditCard(1111222233334444);
+maskCreditCard(1234564487987745);
+maskCreditCard(4444555511127896);
+
+//repaet
+
+const message2 = 'hey mother!!';
+console.log(message2.repeat(3));
+
+const planesInline = function (n) {
+  console.log(`There are ${n} planes in line ${'✈'.repeat(n)}`);
+};
+
+planesInline(2);
+planesInline(5);
+planesInline(6);
