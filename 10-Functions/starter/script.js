@@ -177,6 +177,7 @@ BONUS TEST DATA 2: [1, 5, 3, 9, 6, 1]
 
 GOOD LUCK 😀
 */
+/*
 const poll = {
   question: 'What is your favourite programming language?',
   options: ['0: JavaScript', '1: Python', '2: Rust', '3: C++'],
@@ -209,3 +210,80 @@ const btnPoll = document.querySelector('.poll');
 const pollEventBtn = poll.registerNewAnswer.bind(poll);
 btnPoll.addEventListener('click', pollEventBtn);
 poll.displayResults('string');
+*/
+
+// 立即呼叫function expression 只會執行一次 之後就不會再執行
+// 方法: 先寫一個function expression且不存放於變數(此時會出錯)  這時候再用()包住function expression
+// 然後再用小括號呼叫他
+(function () {
+  console.log(`This will never run again`);
+})();
+
+(() => console.log(`This will ALSO never run again`))();
+
+//----------------
+
+// closure 閉包是在某些情況下自動產生的 所以我們只是要去理解他
+// 所謂的closures就是指一個再執行環境裡被封閉的環境變數(在創造出它的fn裡)，即使執行環境已結束，變數還是能存活。
+// 也可以說closure給予一個function能夠去獲取它父層的function裡的所有變數，就算父層的function已經執行完畢(return完)
+// 總之closure就是一個能確保function不會失去與跟他一樣出生環境的變數的連結
+// 另一個理解方法 closure就像一個背包 function會打包所有生出它的出生環境裡的所有變數隨時帶著走
+// !! 每個function都能夠去讀取它當時被創造出來的時候的執行環境的環境變數
+
+const secureBooking = function () {
+  let passemgerCount = 0;
+
+  return function () {
+    passemgerCount++;
+    console.log(`${passemgerCount} passengers`);
+  };
+};
+
+//  secureBooking() 會回傳一個fn 我們把它存在變數裡
+const booker = secureBooking();
+
+booker();
+booker();
+booker(); // =>3 passengers
+
+// 用來查fn詳細資訊
+console.dir(booker);
+
+//Example 1
+
+let f;
+
+const g = function () {
+  const a = 23;
+  f = function () {
+    console.log(a * 2);
+  };
+};
+
+const h = function () {
+  const b = 777;
+  f = function () {
+    console.log(b * 2);
+  };
+};
+
+g();
+f();
+
+// re-assigning f fn
+h();
+f();
+console.dir(f); // closure變成h();
+
+//Example 2
+
+const boardPassengers = function (n, wait) {
+  const perGroup = n / 3;
+
+  setTimeout(function () {
+    console.log(`We are now borading all ${n} passengers`);
+    console.log(`There are 3 groups, each with ${perGroup} passengers`);
+  }, wait * 1000);
+};
+
+boardPassengers(180, 3);
