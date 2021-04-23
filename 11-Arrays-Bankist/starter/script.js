@@ -180,7 +180,7 @@ TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
 
 GOOD LUCK 😀
 */
-
+/* 
 const checkDogs = function (dogsAll) {
   dogsAll.forEach(function (dog, i) {
     dog >= 3
@@ -196,3 +196,29 @@ const dogsJuliaCorrected = [...dogsJulia].slice(1, -1);
 const dogsAll = dogsJuliaCorrected.concat(dogsKate);
 
 checkDogs(dogsAll);
+*/
+
+// MAP method 與 foreach最大差別在 MAP會回傳一個新的陣列 forEach不會
+// 另外map最終是得到一個新的陣列值，而forEach是在每次回圈都會做些事這對程式碼會有side effect
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+const eurToUsd = 1.1;
+
+// const movementsUSD = movements.map(function (mov) {
+//   return mov * eurToUsd;
+// });
+const movementsUSD = movements.map(mov => mov * eurToUsd);
+
+console.log(movements, movementsUSD);
+
+const movementsUSDfor = [];
+for (const mov of movements) movementsUSDfor.push(mov * eurToUsd);
+console.log(movementsUSDfor);
+
+const movementsDescriptions = movements.map(
+  (mov, i) =>
+    `Movement ${i + 1}: You ${mov > 0 ? 'deposited' : 'withdrew'} ${Math.abs(
+      mov
+    )}`
+);
+console.log(movementsDescriptions);
