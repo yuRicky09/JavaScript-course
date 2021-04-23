@@ -81,6 +81,30 @@ const displayMovements = function (movements) {
 };
 
 displayMovements(account1.movements);
+
+const createUsername = function (accs) {
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+      .toLocaleLowerCase()
+      .split(' ')
+      .map(name => name[0])
+      .join('');
+  });
+  return accs;
+};
+
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// const user = 'Steven Thomas Williams'; // how to be =>str
+console.log(createUsername(accounts));
+
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, el) => acc + el, 0);
+  labelBalance.textContent = `${balance} EUR`;
+};
+
+calcDisplayBalance(account1.movements);
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -200,13 +224,14 @@ checkDogs(dogsAll);
 
 // MAP method 與 foreach最大差別在 MAP會回傳一個新的陣列 forEach不會
 // 另外map最終是得到一個新的陣列值，而forEach是在每次回圈都會做些事這對程式碼會有side effect
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+//const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
-const eurToUsd = 1.1;
+//const eurToUsd = 1.1;
 
 // const movementsUSD = movements.map(function (mov) {
 //   return mov * eurToUsd;
 // });
+/*
 const movementsUSD = movements.map(mov => mov * eurToUsd);
 
 console.log(movements, movementsUSD);
@@ -222,3 +247,76 @@ const movementsDescriptions = movements.map(
     )}`
 );
 console.log(movementsDescriptions);
+*/
+
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// 滿足條件的true值會被丟進容器裡，false的則過濾掉
+const deposit = movements.filter(function (mov) {
+  return mov > 0;
+});
+console.log(movements);
+console.log(deposit);
+
+const depositFor = [];
+for (const mov of movements) if (mov > 0) depositFor.push(mov);
+console.log(depositFor);
+
+const withdrawals = movements.filter(mov => mov < 0);
+console.log(withdrawals);
+
+// reduce  reduce(fn(accumulator=累加器,現在的元素,index,arr), 累加器初始值)
+
+const balance = movements.reduce(function (acc, el, i, arr) {
+  console.log(`Iteration ${i}: ${acc}`);
+  return acc + el;
+}, 0);
+console.log(balance);
+
+let balance2 = 0;
+for (const mov of movements) balance2 += mov;
+console.log(balance2);
+
+// Maximum value
+
+const max = movements.reduce((acc, el) => {
+  if (acc > el) return acc;
+  else return el;
+}, movements[0]);
+console.log(max);
+
+// Coding Challenge #2
+
+/* 
+Let's go back to Julia and Kate's study about dogs. This time, they want to convert dog ages to human ages and calculate the average age of the dogs in their study.
+
+Create a function 'calcAverageHumanAge', which accepts an arrays of dog's ages ('ages'), and does the following things in order:
+
+1. Calculate the dog age in human years using the following formula: if the dog is <= 2 years old, humanAge = 2 * dogAge. If the dog is > 2 years old, humanAge = 16 + dogAge * 4.
+2. Exclude all dogs that are less than 18 human years old (which is the same as keeping dogs that are at least 18 years old)
+3. Calculate the average human age of all adult dogs (you should already know from other challenges how we calculate averages 😉)
+4. Run the function for both test datasets
+
+TEST DATA 1: [5, 2, 4, 1, 15, 8, 3]
+TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
+
+GOOD LUCK 😀
+*/
+
+const calcAverageHumanAge = function (dogs) {
+  const humanAge = dogs.map(dog => {
+    if (dog <= 2) return dog * 2;
+    else return 16 + dog * 4;
+  });
+  const newHumamAge = humanAge.filter(humanAge => humanAge >= 18);
+  // console.log(
+  //   newHumamAge.reduce((acc, el) => acc + el, 0) / newHumamAge.length
+  // );
+  // (2+3) / 2 === 2 / 2 + 3 / 2
+  console.log(
+    newHumamAge.reduce((acc, el, i, arr) => acc + el / arr.length, 0)
+  );
+};
+
+calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]);
+calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
