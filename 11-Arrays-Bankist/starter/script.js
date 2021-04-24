@@ -82,6 +82,41 @@ const displayMovements = function (movements) {
 
 displayMovements(account1.movements);
 
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// const user = 'Steven Thomas Williams'; // how to be =>str
+
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, el) => acc + el, 0);
+  labelBalance.textContent = `${balance} €`;
+};
+
+calcDisplayBalance(account1.movements);
+
+const calcDisplaySummary = function (movements) {
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${incomes}€`;
+
+  const out = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(out)}€`;
+
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * 1.2) / 100)
+    .filter((int, i, arr) => {
+      console.log(arr);
+      return int >= 1;
+    })
+    .reduce((acc, int) => acc + int, 0);
+  labelSumInterest.textContent = interest;
+};
+
+calcDisplaySummary(account1.movements);
+
 const createUsername = function (accs) {
   accs.forEach(function (acc) {
     acc.username = acc.owner
@@ -93,17 +128,7 @@ const createUsername = function (accs) {
   return accs;
 };
 
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
-// const user = 'Steven Thomas Williams'; // how to be =>str
-console.log(createUsername(accounts));
-
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, el) => acc + el, 0);
-  labelBalance.textContent = `${balance} EUR`;
-};
-
-calcDisplayBalance(account1.movements);
+createUsername(accounts);
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -303,20 +328,43 @@ TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
 GOOD LUCK 😀
 */
 
+// const calcAverageHumanAge = function (dogs) {
+//   const humanAge = dogs.map(dog => {
+//     if (dog <= 2) return dog * 2;
+//     else return 16 + dog * 4;
+//   });
+//   const newHumamAge = humanAge.filter(humanAge => humanAge >= 18);
+//   // console.log(
+//   //   newHumamAge.reduce((acc, el) => acc + el, 0) / newHumamAge.length
+//   // );
+//   // (2+3) / 2 === 2 / 2 + 3 / 2
+//   console.log(
+//     newHumamAge.reduce((acc, el, i, arr) => acc + el / arr.length, 0)
+//   );
+// };
+
 const calcAverageHumanAge = function (dogs) {
-  const humanAge = dogs.map(dog => {
-    if (dog <= 2) return dog * 2;
-    else return 16 + dog * 4;
-  });
-  const newHumamAge = humanAge.filter(humanAge => humanAge >= 18);
-  // console.log(
-  //   newHumamAge.reduce((acc, el) => acc + el, 0) / newHumamAge.length
-  // );
-  // (2+3) / 2 === 2 / 2 + 3 / 2
-  console.log(
-    newHumamAge.reduce((acc, el, i, arr) => acc + el / arr.length, 0)
-  );
+  const newHumamAge = dogs
+    .map(dog => {
+      if (dog <= 2) return dog * 2;
+      else return 16 + dog * 4;
+    })
+    .filter(humanAge => humanAge >= 18)
+    .reduce((acc, el, i, arr) => acc + el / arr.length, 0);
+  console.log(newHumamAge);
 };
 
 calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]);
 calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
+
+// find method
+// find跟filter的差異在於 find只會抓出第一個符合狀況的true值元素 不是回傳陣列
+const firstWithdrawal = movements.find(mov => mov < 0);
+console.log(movements);
+console.log(firstWithdrawal);
+
+console.log(accounts);
+
+// find的強大在於可以設定條件去抓陣列中唯一符合條件的物件
+const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account);
