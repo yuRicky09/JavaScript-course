@@ -189,6 +189,47 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
+// loan貸款
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    currentAccount.movements.push(amount);
+
+    // update UI
+    upDateUI(currentAccount);
+  }
+
+  inputLoanAmount.value = '';
+});
+
+// 刪除帳戶
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  if (
+    inputCloseUsername.value === currentAccount.username &&
+    Number(inputClosePin.value) === currentAccount.pin
+  ) {
+    // findIndex跟indexof的差異在於findIndex可以給一個判斷狀況，
+    // 他會挑出符合這個狀況的元素的index 而indexof只能給他一個確切的值他會去判斷有無在array裡
+    const index = accounts.findIndex(
+      acc => acc.username === currentAccount.username
+    );
+
+    // 刪除帳戶
+    accounts.splice(index, 1);
+
+    // hide UI
+    containerApp.style.opacity = 0;
+  }
+
+  inputCloseUsername.value = inputClosePin.value = '';
+});
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -427,3 +468,25 @@ console.log(accounts);
 // find的強大在於可以設定條件去抓陣列中唯一符合條件的物件
 const account = accounts.find(acc => acc.owner === 'Jessica Davis');
 console.log(account);
+
+// flat 可以拆解巢狀式陣列 預設為拆解1層
+const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+console.log(arr.flat());
+
+const arrDeep = [[[1, 2], 3], [4, 5, 6], 7, 8];
+console.log(arrDeep.flat(2));
+
+// 抓出所有金錢流動並且計算總合
+
+const overallBalance = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(overallBalance);
+
+// map + flat === flatmap
+
+const overallBalance2 = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(overallBalance2);
