@@ -61,10 +61,13 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = function (movements) {
+//  加入sort參數 預設為false表示預設不排列
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
+  // 這邊先用slice在用sort是因為不想改動到原先的陣列,所以先用slice創造出一個新的陣列回來
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
 
-  movements.forEach(function (mov, i) {
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
@@ -228,6 +231,16 @@ btnClose.addEventListener('click', function (e) {
   }
 
   inputCloseUsername.value = inputClosePin.value = '';
+});
+
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  // 排序參數寫死不是正解，這樣在案就不會復原
+  // displayMovements(currentAccount.movements, true);
+  // 我們要設一個監聽者變數去看我們要排序還是不需要
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
 });
 
 /////////////////////////////////////////////////
@@ -490,3 +503,28 @@ const overallBalance2 = accounts
   .flatMap(acc => acc.movements)
   .reduce((acc, mov) => acc + mov, 0);
 console.log(overallBalance2);
+
+// SORT  metho
+//String
+
+const owners = ['leo', 'yu', 'jack', 'kitty'];
+
+// 會按照字母順序排列,並且會改變原先陣列
+console.log(owners.sort());
+console.log(owners);
+
+// Number
+// 不給sort帶任何參數的情況下會把數字轉成(不是真的轉)字串來排列
+
+// sort()會依匿名函式的參數與回傳的值為精確的排序規則：
+// 當回傳值為負數時，那麼前面的數放在前面
+// 當回傳值為正整數，那麼後面的數在前面
+// 當回傳值為零，保持不動。
+
+// 升敘
+movements.sort((a, b) => a - b);
+console.log(movements);
+
+// 降敘
+movements.sort((a, b) => b - a);
+console.log(movements);

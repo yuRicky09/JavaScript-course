@@ -105,6 +105,7 @@ const getCountryData = function (country) {
       response.json()
     )
     .then(data => {
+      console.log(data);
       renderCountry(data[0]);
       const neighbour = data[0].borders[0];
 
