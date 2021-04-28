@@ -528,3 +528,202 @@ console.log(movements);
 // 降敘
 movements.sort((a, b) => b - a);
 console.log(movements);
+
+// fill method
+// 通常建立array的方法
+const arr3 = [1, 2, 3, 4, 5, 6, 7];
+
+const x = new Array(1, 2, 3, 4, 5, 6, 7);
+console.log(x);
+// 不過要注意new Array這個建構方法
+// 當參數只帶一個n時 他是只會建立出一個陣列，裡面塞n個空元素
+const y = new Array(7);
+console.log(y); // =>[empty × 7]
+
+// fill 方法可以拿來填滿陣列
+y.fill(1);
+console.log(y); // => [1, 1, 1, 1, 1, 1, 1]
+// 也可像slice一樣 .fill(填入的數字, 起始, 填到結尾-1個 )
+
+y.fill(2, 4, 6);
+console.log(y); // =>[1, 1, 1, 1, 2, 2, 1]
+
+// 另一種建立array的方法
+// Array.from({ length: 長度}, Map method)
+const z = Array.from({ length: 7 }, () => 1);
+console.log(z); // => [1, 1, 1, 1, 1, 1, 1]
+// 當參數沒有要用到時可以用_代替
+const z2 = Array.from({ length: 7 }, (_, i) => i + 1);
+console.log(z2); // =>[1, 2, 3, 4, 5, 6, 7]
+
+const randomDice = function () {
+  const num = Array.from(
+    { length: 1 },
+    () => Math.trunc(Math.random() * 100) + 1
+  );
+  console.log(num);
+};
+randomDice();
+// Array.from最大用處是在於可以把array-like(可迭代但不是陣列的似陣列物件轉成陣列)
+
+labelBalance.addEventListener('click', function () {
+  const movementsUI = Array.from(
+    document.querySelectorAll('.movements__value'),
+    el => Number(el.textContent.replace('€', ''))
+  );
+  console.log(movementsUI);
+});
+
+// Array method practice
+// 想算出所有儲存錢的次數之總
+
+const bankDepositSum = accounts
+  .map(cur => cur.movements)
+  .flat()
+  .filter(cur => cur >= 0)
+  .reduce((sum, cur) => sum + cur, 0);
+console.log(bankDepositSum);
+
+// 計算出單筆存款大於1000的次數
+// const numDeposits1000 = accounts
+//   .flatMap(acc => acc.movements)
+//   .filter(mov => mov >= 1000).length;
+
+// console.log(numDeposits1000);
+// 方法二 用reduce來計算次數
+const numDeposits1000 = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((counter, cur) => (cur >= 1000 ? ++counter : counter), 0);
+console.log(numDeposits1000);
+
+// ++a 與 a++ 的不同
+// a++雖然會讓a+1，但是回傳的值會是先前未加+的值
+// ++a則相反，會回傳直接+1的值
+
+// 3. reduce能得到一個值，而那個值也可以是一個物件，一個陣列 純看你的加總器的型別 譬如要一次算出存錢總額和提款總額
+
+const { diposit, withdrawal } = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    (sum, cur) => {
+      // cur > 0 ? (sum.deposit += cur) : (sum.withdrawal += cur);
+      // return sum;
+      sum[cur > 0 ? 'diposit' : 'withdrawal'] += cur;
+      return sum;
+    },
+    { diposit: 0, withdrawal: 0 }
+  );
+console.log(diposit, withdrawal);
+
+// 4. 字串method + array method 綜合應用
+// this is a nice title => This Is a Nice Title
+const convertTitleCase = function (title) {
+  const exception = ['a', 'an', 'and', 'the', 'but', 'or', 'on', 'in', 'with'];
+
+  const capitzalize = str => str[0].toUpperCase() + str.slice(1);
+  const titleCase = title
+    .toLowerCase()
+    .split(' ')
+    .map(word => {
+      return exception.includes(word) ? word : capitzalize(word);
+    })
+    .join(' ');
+  return capitzalize(titleCase);
+};
+
+console.log(convertTitleCase('this is a nice title'));
+console.log(convertTitleCase('this Is A LONG title'));
+console.log(convertTitleCase('and here is another title'));
+
+// code challenge4
+/* 
+Julia and Kate are still studying dogs, and this time they are studying if dogs are eating too much or too little.
+Eating too much means the dog's current food portion is larger than the recommended portion, and eating too little is the opposite.
+Eating an okay amount means the dog's current food portion is within a range 10% above and 10% below the recommended portion (see hint).
+
+1. Loop over the array containing dog objects, and for each dog, calculate the recommended food portion and add it to the object as a new property. Do NOT create a new array, simply loop over the array. Forumla: recommendedFood = weight ** 0.75 * 28. (The result is in grams of food, and the weight needs to be in kg)
+2. Find Sarah's dog and log to the console whether it's eating too much or too little. HINT: Some dogs have multiple owners, so you first need to find Sarah in the owners array, and so this one is a bit tricky (on purpose) 🤓
+3. Create an array containing all owners of dogs who eat too much ('ownersEatTooMuch') and an array with all owners of dogs who eat too little ('ownersEatTooLittle').
+4. Log a string to the console for each array created in 3., like this: "Matilda and Alice and Bob's dogs eat too much!" and "Sarah and John and Michael's dogs eat too little!"
+5. Log to the console whether there is any dog eating EXACTLY the amount of food that is recommended (just true or false)
+6. Log to the console whether there is any dog eating an OKAY amount of food (just true or false)
+7. Create an array containing the dogs that are eating an OKAY amount of food (try to reuse the condition used in 6.)
+8. Create a shallow copy of the dogs array and sort it by recommended food portion in an ascending order (keep in mind that the portions are inside the array's objects)
+
+HINT 1: Use many different tools to solve these challenges, you can use the summary lecture to choose between them 😉
+HINT 2: Being within a range 10% above and below the recommended portion means: current > (recommended * 0.90) && current < (recommended * 1.10). Basically, the current portion should be between 90% and 110% of the recommended portion.
+
+TEST DATA:
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] }
+];
+
+GOOD LUCK 😀
+*/
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] },
+];
+
+//1. 跑迴圈 計算出每個狗平均食量並且加這個屬性到每個object
+// const recommendedFood = dogs.map(dog => dog.weight ** 0.75 * 28);
+// console.log(recommendedFood);
+dogs.map(dog => (dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28)));
+console.log(dogs);
+
+// 2. 找出sarah的狗 比看他的狗有吃多還是吃少
+// 使用find find會找陣列元素中第一個符合callback內寫的狀況者並回傳(意指條件為true)
+const sarahDog = dogs.find(dog => dog.owners.includes('Sarah'));
+console.log(sarahDog);
+
+// 3. 建兩個陣列 一個存放所有吃多的狗 一個存放所有吃少的狗
+// const ownersEatTooMuch = [];
+// const ownersEatTooLittle = [];
+// dogs.map(dog => {
+//   if (dog.curFood > dog.recommendedFood * 1.1) {
+//     ownersEatTooMuch.push(dog.owners);
+//   } else if (dog.curFood < dog.recommendedFood * 0.9) {
+//     ownersEatTooLittle.push(dog.owners);
+//   }
+// });
+// console.log(ownersEatTooMuch, ownersEatTooLittle);
+const ownersEatTooMuch = dogs
+  .filter(dog => dog.curFood > dog.recommendedFood)
+  .map(dog => dog.owners)
+  .flat();
+console.log(ownersEatTooMuch);
+const ownersEatTooLittl = dogs
+  .filter(dog => dog.curFood < dog.recommendedFood)
+  .map(dog => dog.owners)
+  .flat();
+console.log(ownersEatTooLittl);
+// 4.
+console.log(`${ownersEatTooMuch.join(' and ')}'s dogs eat too much!`);
+console.log(`${ownersEatTooLittl.join(' and ')}'s dogs eat too little!`);
+// 5.
+console.log(dogs.some(dog => dog.curFood === dog.recommendedFood));
+//6.
+console.log(
+  dogs.some(
+    dog =>
+      dog.curFood > dog.recommendedFood * 0.9 &&
+      dog.curFood < dog.recommendedFood * 1.1
+  )
+);
+const ownersEatOk = dogs.find(
+  dog =>
+    dog.curFood > dog.recommendedFood * 0.9 &&
+    dog.curFood < dog.recommendedFood * 1.1
+);
+console.log(ownersEatOk);
+
+// 8.
+const dogsCopy = dogs
+  .slice()
+  .sort((a, b) => a.recommendedFood - b.recommendedFood);
+console.log(dogsCopy);
