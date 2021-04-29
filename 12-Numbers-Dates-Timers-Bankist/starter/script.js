@@ -251,3 +251,70 @@ btnSort.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
+
+// JS的number特色之一是 不管是寫整數或帶小數點都會被判定為帶小數數字(decimal)
+console.log(23 === 23.0);
+
+// 快速轉數字方法  字串前用+符號
+console.log(+'23');
+
+// parsing 解析
+console.log(Number.parseInt('30px')); // => 30
+console.log(Number.parseInt('r30')); // => NaN
+
+console.log(Number.parseFloat('2.5rem')); // => 2.5
+
+// check is number or not
+console.log(Number.isFinite(20)); // true
+console.log(Number.isFinite('20')); // =>false
+
+// check is integer or not
+console.log(Number.isInteger(23));
+console.log(Number.isInteger(23.0));
+
+// remainder operator 餘數運算子
+console.log(5 % 2); // => 1
+
+// 把nodelist轉成陣列的方法 Array.from or [...]
+[...document.querySelectorAll('.movements_row')].forEach;
+
+// type date amd times
+
+// Create a date
+
+const now = new Date();
+console.log(now);
+
+console.log(new Date('Deceber 24,2015'));
+
+// 在JS中 月份是zero based
+console.log(new Date(2021, 3, 30, 15, 20, 5));
+// JS還有一個奇特的地方是會幫忙修正錯誤日期成正確日期
+// 因11月沒有33號 他自動轉成12月3號
+console.log(new Date(2021, 10, 33)); //Fri Dec 03 2021 00:00:00 GMT+0800 (台北標準時間)
+
+// unix time = 1970.1.1
+console.log(new Date(0)); // Thu Jan 01 1970
+console.log(new Date(3 * 24 * 60 * 60 * 1000)); //Sun Jan 04 1970
+
+// Working with dates  new Date()生出來的也是一個物件 所以會有method
+
+const future = new Date(2021, 3, 30, 15, 20, 5);
+console.log(future);
+console.log(typeof future); // object
+console.log(future.getFullYear());
+console.log(future.getMonth()); // 月
+console.log(future.getDate()); // 日
+console.log(future.getDay()); // 星期  sunday = 0 monday = 1
+console.log(future.getHours()); // 星期  sunday = 0 monday = 1
+console.log(future.getMinutes()); // 星期  sunday = 0 monday = 1
+console.log(future.getSeconds()); // 星期  sunday = 0 monday = 1
+console.log(future.toISOString()); // 星期  sunday = 0 monday = 1
+console.log(future.getTime());
+
+console.log(new Date(1619767205000));
+
+console.log(Date.now()); // 得到現在的時間戳記 1619717801801
+
+future.setFullYear(2040);
+console.log(future);
