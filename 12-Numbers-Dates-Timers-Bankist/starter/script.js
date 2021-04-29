@@ -318,3 +318,33 @@ console.log(Date.now()); // 得到現在的時間戳記 1619717801801
 
 future.setFullYear(2040);
 console.log(future);
+// 當然也有set mouth day.........
+
+// timer!!!!
+setTimeout(() => console.log('Here is your pizza🍕'), 3000);
+
+// setTimeout其實也可以但參數進去callback fn
+setTimeout(
+  (ing1, ing2) => console.log(`Here is your pizza with ${ing1} and ${ing2}🍕`),
+  3000,
+  'kimuchi',
+  'seafood'
+);
+
+// 我們可以使用 clearTimeout來取消setTimeout
+
+const ingredients = ['olives', 'spinach'];
+const pizzaTimer = setTimeout(
+  (ing1, ing2) => console.log(`Here is your pizza with ${ing1} and ${ing2}🍕`),
+  3000,
+  ...ingredients
+);
+
+if (ingredients.includes('olives')) clearTimeout(pizzaTimer);
+
+// setInterval 每??毫秒執行一次
+
+// setInterval(() => {
+//   const now = new Date();
+//   console.log(`${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`);
+// }, 3000);
