@@ -199,6 +199,29 @@ const headerObserver = new IntersectionObserver(stickyNav, {
   rootMargin: `-${navHeight}px`, // 擴大或縮小觀察器的鏡頭範圍
 });
 headerObserver.observe(header);
+
+//* reveal(顯示) section
+
+const sectionAll = document.querySelectorAll('.section');
+
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+  // 當觀察目標近來且執行完畢後沒要在執行任何事就可取消觀察 不要浪費效能
+  observer.unobserve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+// 使用forEach 讓每個對象都能被觀察
+sectionAll.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+});
+
 //這三個特殊元素不需要在加選取器就能選到
 // documentElement 才是真正的整個頁面
 // console.log(document.documentElement);
