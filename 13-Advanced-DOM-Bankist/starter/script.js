@@ -8,6 +8,15 @@ const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+const nav = document.querySelector('.nav');
+
 const openModal = function (e) {
   e.preventDefault();
   modal.classList.remove('hidden');
@@ -30,10 +39,7 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-//  ---------製作點擊按鈕滾動畫面的效果-------------
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1');
-
+//*  ---------製作點擊按鈕滾動畫面的效果-------------
 // 舊式作法 使用 getBoundingClientRect 此方法的回傳值為一個DOMrect，是包含完整元素的最小矩形，并且拥有left, top, right, bottom, x, y, width, 和 height这几个以像素为单位的只读属性用于描述整个边框。
 //除了width 和 height 以外的属性是"相对于视图窗口"的"左上角"来计算的。
 
@@ -55,7 +61,7 @@ btnScrollTo.addEventListener('click', function (e) {
   );
 
   /////////////////////////////////////////////////////////////////
-  //Scrolling
+  //* Scrolling
   // 要正確滾動到想要的位置的話並須使用想跳轉點與視窗左上角的相對位置距離值 + 目前滾動點與網頁左上角的相對位置值
   // window.scrollTo(
   //   s1coords.left + window.pageXOffset,
@@ -73,19 +79,19 @@ btnScrollTo.addEventListener('click', function (e) {
 });
 
 ////////////////////////////////////////////////////////////////
-// Page navigation
+//* Page navigation
 
 // 方法一 不過這效能不佳 因為會在每個元素上都加上這個callback fn
 // document.querySelectorAll('.nav__link').forEach(function (el) {
 //   el.addEventListener('click', function (e) {
 //     e.preventDefault();
-//     // 拿herf屬性的值  這邊會得到錨點id
+//     拿herf屬性的值  這邊會得到錨點id
 //     const id = this.getAttribute('href');
 //     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
 //   });
 // });
 
-//方法二  把事件加在他們共同的父元素上 效能叫好!!!!
+//**方法二  把事件加在他們共同的父元素上 效能較好!!!!
 document.querySelector('.nav__links').addEventListener('click', function (e) {
   e.preventDefault();
 
@@ -95,6 +101,55 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
   }
 });
+
+//* Tabbed component  tab(標籤)
+
+tabsContainer.addEventListener('click', function (e) {
+  //! 因btn內還有span元素 我們希望點到span or btn都能選到btn 故用closest
+  const clicked = e.target.closest('.operations__tab');
+
+  //!  Guard clause 因為整個父層都在監聽 如果這時候點到btn以外的範圍因為找不到.operations__tab類名的父元素，會回傳null回來 所以此時clicked會變成null 對null執行方法想當然 噴錯
+  //! 所以這邊下個if防衛機制， not null === true  直接return不執行後面的程式碼
+  if (!clicked) return;
+
+  //! 慣用作法 先移掉所有同名元素的class，在位個別的對象加class
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+  clicked.classList.add('operations__tab--active');
+
+  //** Activate(啟用) content area
+  document;
+  tabsContent.forEach(el => el.classList.remove('operations__content--active'));
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
+});
+
+//* Menu fade animation
+//  mouseover跟mouseenter很相似 差異只在於mouseover有冒泡 mouseenter沒有
+const handleHover = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+
+    siblings.forEach(el => {
+      if (el !== link) el.style.opacity = this;
+    });
+
+    logo.style.opacity = this;
+  }
+};
+
+//!用bind改寫 bind會複製叫他的function並且把帶入的第一個參數當作this
+//!並且回傳這個function 所以我們下面做法可以得到一個被改變this的handleHover
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+// nav.addEventListener('mouseover', function (e) {
+//   handleHover(e, 0.5);
+// });
+nav.addEventListener('mouseout', handleHover.bind(1));
+// nav.addEventListener('mouseout', function (e) {
+//   handleHover(e, 1);
+// });
 
 //這三個特殊元素不需要在加選取器就能選到
 // documentElement 才是真正的整個頁面
@@ -194,20 +249,20 @@ NODE LIST VS.  HTML COLLECTION
 
 // const h1 = document.querySelector('h1');
 // const alertH1 = function () {
-//   alert('addEventListener: Great! You are reading the heading :D');
-//   // 只想觸發一次事件，之後想取消可以使用.removeEventListener
-//   // h1.removeEventListener('mouseenter', alertH1);
+// alert('addEventListener: Great! You are reading the heading :D');
+// 只想觸發一次事件，之後想取消可以使用.removeEventListener
+// h1.removeEventListener('mouseenter', alertH1);
 // };
 
-// // h1.addEventListener('mouseenter', alertH1);
+//  h1.addEventListener('mouseenter', alertH1);
 
-// // 取消事件也可以拉出來使用 舉例:3秒後再取消事件
-// // setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 3000);
+// 取消事件也可以拉出來使用 舉例:3秒後再取消事件
+// setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 3000);
 
-// // 捕獲與冒泡
-// // 預設下 事件只會在冒泡階段被處理
+//  捕獲與冒泡
+//  預設下 事件只會在冒泡階段被處理
 
-// // Math.floor() 函式會回傳小於等於所給數字的最大整數。
+//  Math.floor() 函式會回傳小於等於所給數字的最大整數。
 // const randomInt = (min, max) =>
 //   Math.floor(Math.random() * (max - min + 1) + min);
 // const randomColor = () =>
@@ -236,30 +291,31 @@ NODE LIST VS.  HTML COLLECTION
 
 // Going downwards: child 向下找子層
 // querySelector不只能作用於document也能用在任何element上
-const h1 = document.querySelector('h1');
+// const h1 = document.querySelector('h1');
 // 這樣選的話就只會選到h1標籤內層裡帶有.highlight類名的元素
-console.log(h1.querySelectorAll('.highlight'));
-console.log(h1.childNodes); // 選所有子節點 text comment也都是一種節點的型態
-console.log(h1.children); // 選子元素
-h1.firstElementChild.style.color = 'white';
-h1.lastElementChild.style.color = 'orangered';
+// console.log(h1.querySelectorAll('.highlight'));
+// console.log(h1.childNodes); // 選所有子節點 text comment也都是一種節點的型態
+// console.log(h1.children); // 選子元素
+// h1.firstElementChild.style.color = 'white';
+// h1.lastElementChild.style.color = 'orangered';
 
 // Going upwards: parents
-console.log(h1.parentNode);
-console.log(h1.parentElement);
+// console.log(h1.parentNode);
+// console.log(h1.parentElement);
 //
 //! 可以想像為querySelector的反向版本 用來選取最近的父層!! 很常用!
-console.log(h1.closest('.header'));
+//! 如果帶入的參數名是自己的話(沒有其他父層就這個名子)就會選到自己
+// console.log(h1.closest('.header'));
 
 // Going sideways: siblings
-console.log(h1.previousSibling);
-console.log(h1.nextSibling);
+// console.log(h1.previousSibling);
+// console.log(h1.nextSibling);
 
-console.log(h1.previousElementSibling);
-console.log(h1.nextElementSibling);
+// console.log(h1.previousElementSibling);
+// console.log(h1.nextElementSibling);
 
 // ** 找出所有兄弟層元素的方法
-console.log(h1.parentElement.children);
-[...h1.parentElement.children].forEach(function (el) {
-  if (el !== h1) el.style.transform = 'scale(0.5)';
-});
+// console.log(h1.parentElement.children);
+// [...h1.parentElement.children].forEach(function (el) {
+// if (el !== h1) el.style.transform = 'scale(0.5)';
+// });
