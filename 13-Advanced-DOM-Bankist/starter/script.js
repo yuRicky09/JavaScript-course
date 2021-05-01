@@ -30,6 +30,72 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+//  ---------製作點擊按鈕滾動畫面的效果-------------
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+// 舊式作法 使用 getBoundingClientRect 此方法的回傳值為一個DOMrect，是包含完整元素的最小矩形，并且拥有left, top, right, bottom, x, y, width, 和 height这几个以像素为单位的只读属性用于描述整个边框。
+//除了width 和 height 以外的属性是"相对于视图窗口"的"左上角"来计算的。
+
+btnScrollTo.addEventListener('click', function (e) {
+  // coord = 座標
+  const s1coords = section1.getBoundingClientRect();
+  console.log(s1coords);
+
+  console.log(e.target.getBoundingClientRect());
+
+  // window.pageXOffset, window.pageYOffset 就會是相對於整個網頁的左上角(非viewport)與當前的滾動位置的距離
+  console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
+
+  // 查詢現在視窗vp的高與寬
+  console.log(
+    'height/width viewport',
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  /////////////////////////////////////////////////////////////////
+  //Scrolling
+  // 要正確滾動到想要的位置的話並須使用想跳轉點與視窗左上角的相對位置距離值 + 目前滾動點與網頁左上角的相對位置值
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset,
+  //   s1coords.top + window.pageYOffset
+  // );
+
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth', // 製造滑順滾動的動畫
+  // });
+
+  // 最新瀏覽器支援的做法
+  section1.scrollIntoView({ behavior: 'smooth' });
+});
+
+////////////////////////////////////////////////////////////////
+// Page navigation
+
+// 方法一 不過這效能不佳 因為會在每個元素上都加上這個callback fn
+// document.querySelectorAll('.nav__link').forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+//     // 拿herf屬性的值  這邊會得到錨點id
+//     const id = this.getAttribute('href');
+//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+//   });
+// });
+
+//方法二  把事件加在他們共同的父元素上 效能叫好!!!!
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  e.preventDefault();
+
+  // 使用e.target去配對我們實際上想選擇到的DOM元素
+  if (e.target.classList.contains('nav__link')) {
+    const id = e.target.getAttribute('href');
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
 //這三個特殊元素不需要在加選取器就能選到
 // documentElement 才是真正的整個頁面
 // console.log(document.documentElement);
@@ -124,85 +190,76 @@ NODE LIST VS.  HTML COLLECTION
 // Don't use
 // logo.className = 'a' //會覆寫
 
-//  ---------製作點擊按鈕滾動畫面的效果-------------
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1');
-
-// 舊式作法 使用 getBoundingClientRect 此方法的回傳值為一個DOMrect，是包含完整元素的最小矩形，并且拥有left, top, right, bottom, x, y, width, 和 height这几个以像素为单位的只读属性用于描述整个边框。
-//除了width 和 height 以外的属性是"相对于视图窗口"的"左上角"来计算的。
-
-btnScrollTo.addEventListener('click', function (e) {
-  // coord = 座標
-  const s1coords = section1.getBoundingClientRect();
-  console.log(s1coords);
-
-  console.log(e.target.getBoundingClientRect());
-
-  // window.pageXOffset, window.pageYOffset 就會是相對於整個網頁的左上角(非viewport)與當前的滾動位置的距離
-  console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
-
-  // 查詢現在視窗vp的高與寬
-  console.log(
-    'height/width viewport',
-    document.documentElement.clientHeight,
-    document.documentElement.clientWidth
-  );
-
-  //Scrolling
-  // 要正確滾動到想要的位置的話並須使用想跳轉點與視窗左上角的相對位置距離值 + 目前滾動點與網頁左上角的相對位置值
-  // window.scrollTo(
-  //   s1coords.left + window.pageXOffset,
-  //   s1coords.top + window.pageYOffset
-  // );
-
-  // window.scrollTo({
-  //   left: s1coords.left + window.pageXOffset,
-  //   top: s1coords.top + window.pageYOffset,
-  //   behavior: 'smooth', // 製造滑順滾動的動畫
-  // });
-
-  // 最新瀏覽器支援的做法
-  section1.scrollIntoView({ behavior: 'smooth' });
-});
-
 //---------------- Event:mouseenter 有點像是css的hover
 
+// const h1 = document.querySelector('h1');
+// const alertH1 = function () {
+//   alert('addEventListener: Great! You are reading the heading :D');
+//   // 只想觸發一次事件，之後想取消可以使用.removeEventListener
+//   // h1.removeEventListener('mouseenter', alertH1);
+// };
+
+// // h1.addEventListener('mouseenter', alertH1);
+
+// // 取消事件也可以拉出來使用 舉例:3秒後再取消事件
+// // setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 3000);
+
+// // 捕獲與冒泡
+// // 預設下 事件只會在冒泡階段被處理
+
+// // Math.floor() 函式會回傳小於等於所給數字的最大整數。
+// const randomInt = (min, max) =>
+//   Math.floor(Math.random() * (max - min + 1) + min);
+// const randomColor = () =>
+//   `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+
+// document.querySelector('.nav__link').addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log(e.target);
+//   console.log(this === e.currentTarget);
+//   console.log('Link');
+// });
+
+// document.querySelector('.nav__links').addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log(e.target);
+//   console.log('Links');
+// });
+
+// document.querySelector('.nav').addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log(e.target);
+//   console.log('Nav');
+// });
+
+// ---------------------DOM traversing(遍歷)
+
+// Going downwards: child 向下找子層
+// querySelector不只能作用於document也能用在任何element上
 const h1 = document.querySelector('h1');
-const alertH1 = function () {
-  alert('addEventListener: Great! You are reading the heading :D');
-  // 只想觸發一次事件，之後想取消可以使用.removeEventListener
-  // h1.removeEventListener('mouseenter', alertH1);
-};
+// 這樣選的話就只會選到h1標籤內層裡帶有.highlight類名的元素
+console.log(h1.querySelectorAll('.highlight'));
+console.log(h1.childNodes); // 選所有子節點 text comment也都是一種節點的型態
+console.log(h1.children); // 選子元素
+h1.firstElementChild.style.color = 'white';
+h1.lastElementChild.style.color = 'orangered';
 
-// h1.addEventListener('mouseenter', alertH1);
+// Going upwards: parents
+console.log(h1.parentNode);
+console.log(h1.parentElement);
+//
+//! 可以想像為querySelector的反向版本 用來選取最近的父層!! 很常用!
+console.log(h1.closest('.header'));
 
-// 取消事件也可以拉出來使用 舉例:3秒後再取消事件
-// setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 3000);
+// Going sideways: siblings
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
 
-// 捕獲與冒泡
-// 預設下 事件只會在冒泡階段被處理
+console.log(h1.previousElementSibling);
+console.log(h1.nextElementSibling);
 
-// Math.floor() 函式會回傳小於等於所給數字的最大整數。
-const randomInt = (min, max) =>
-  Math.floor(Math.random() * (max - min + 1) + min);
-const randomColor = () =>
-  `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
-
-document.querySelector('.nav__link').addEventListener('click', function (e) {
-  this.style.backgroundColor = randomColor();
-  console.log(e.target);
-  console.log(this === e.currentTarget);
-  console.log('Link');
-});
-
-document.querySelector('.nav__links').addEventListener('click', function (e) {
-  this.style.backgroundColor = randomColor();
-  console.log(e.target);
-  console.log('Links');
-});
-
-document.querySelector('.nav').addEventListener('click', function (e) {
-  this.style.backgroundColor = randomColor();
-  console.log(e.target);
-  console.log('Nav');
+// ** 找出所有兄弟層元素的方法
+console.log(h1.parentElement.children);
+[...h1.parentElement.children].forEach(function (el) {
+  if (el !== h1) el.style.transform = 'scale(0.5)';
 });
