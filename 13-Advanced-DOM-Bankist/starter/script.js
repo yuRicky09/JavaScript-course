@@ -151,6 +151,54 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 //   handleHover(e, 1);
 // });
 
+//* sticky navigation
+//* 作法一
+// window可以使用scroll事件
+// 可以理解成當捲動的Y值 > 所選目標物與vp距離值的時候就讓nav固定住
+//! 不過scroll事件效能不好不建議用，因為每次滾動都會執行某些事。
+// const initialCoords = section1.getBoundingClientRect();
+// console.log(initialCoords);
+
+// window.addEventListener('scroll', function () {
+// console.log(window.scrollY);
+
+// if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+// else nav.classList.remove('sticky');
+// });
+//* intersectionObserver API  intersecting= 相交
+//! 這個callback可以理解為當觀察目標進入觀察器的鏡頭內時要執行啥fn
+//! entries = 觀察器要觀察的所有目標
+// const obsCallback = function (entries, observer) {
+// entries.forEach(entry => {
+// console.log(entry);
+// });
+// };
+//! 這個option可以理解為要如何設定觀察器的鏡頭
+// const obsOptions = {
+// root: null, // 預設null的話代表視窗(viewport)就是觀察器的鏡頭
+// threshold: 0.1, // threshold === 門檻 臨界點,只觀察目標出現在鏡頭裡的多少%時就執行callback
+// };
+// ! 建立一個觀察器 IntersectionObserver要兩個參數(callback, option)
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+//! 使用這個觀察器的.observe觀察??目標
+// observer.observe(section1);
+//* 作法二
+
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0, // 獵物在viewport裡佔0%時執行callback
+  rootMargin: `-${navHeight}px`, // 擴大或縮小觀察器的鏡頭範圍
+});
+headerObserver.observe(header);
 //這三個特殊元素不需要在加選取器就能選到
 // documentElement 才是真正的整個頁面
 // console.log(document.documentElement);
