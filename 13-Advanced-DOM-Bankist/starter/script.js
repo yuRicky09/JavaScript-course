@@ -219,7 +219,7 @@ const sectionObserver = new IntersectionObserver(revealSection, {
 // 使用forEach 讓每個對象都能被觀察
 sectionAll.forEach(function (section) {
   sectionObserver.observe(section);
-  section.classList.add('section--hidden');
+  // section.classList.add('section--hidden');
 });
 
 //* lazy loading imagine
@@ -250,6 +250,96 @@ const imgObserver = new IntersectionObserver(loadImg, {
 });
 
 imgTargets.forEach(img => imgObserver.observe(img));
+
+//* Slider (幻燈片)
+//! 思考邏輯
+//* 1.我們先把所有圖片用absolute定位讓所有圖片位置都疊在一起 */
+//* 2.想辦法把所有圖片side by side 並排在一起 使用css transform屬性的 translateX  第一張 0% 第二張100% 依此類推*/
+//* 3.為幻燈片的按鈕添加監聽事件
+
+const slides = document.querySelectorAll('.slide');
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+
+const slider = document.querySelector('.slider');
+// 方便check用
+// slider.style.transform = 'translateX(500px)';
+// slider.style.transform = 'scale(0.3) translateX(-700px)';
+// slider.style.overflow = 'visible';
+
+// 0% 100% 200% 300%
+
+//* 切換到下個slide
+//設想有四張 如何變成 0% 100% 200% 300% => 按一下 -100% 0% 100% 200% => 再按一下 -200% -100% 0% 100% => 再按一下 -300% -200% -100% 0% => 再按一下又回到原點 0% 100% 200% 300%
+let curSlide = 0;
+const maxSlide = slides.length;
+
+const goToSlide = function (curSlide) {
+  slides.forEach(
+    (slide, i) =>
+      (slide.style.transform = `translateX(${100 * (i - curSlide)}%)`)
+  );
+};
+
+goToSlide(0);
+
+const nextSlide = function () {
+  if (curSlide === maxSlide - 1) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+  goToSlide(curSlide);
+  activateDot(curSlide);
+};
+
+const prevSlide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide - 1;
+  } else {
+    curSlide--;
+  }
+  goToSlide(curSlide);
+  activateDot(curSlide);
+};
+btnRight.addEventListener('click', nextSlide);
+btnLeft.addEventListener('click', prevSlide);
+//* 建立使用小點點選取slide
+const dotContainer = document.querySelector('.dots');
+
+const createDots = function () {
+  // 這邊用slides跑forEach只是為了當有幾個slide就產生幾個button
+  slides.forEach(function (_, i) {
+    dotContainer.insertAdjacentHTML(
+      'beforeend',
+      `<button class='dots__dot' data-slide='${i}'></button>`
+    );
+  });
+};
+createDots();
+const activateDot = function (slide) {
+  document
+    .querySelectorAll('.dots__dot')
+    .forEach(dot => dot.classList.remove('dots__dot--active'));
+
+  document
+    .querySelector(`.dots__dot[data-slide="${slide}"]`)
+    .classList.add('dots__dot--active');
+};
+dotContainer.addEventListener('click', function (e) {
+  if (e.target.classList.contains('dots__dot')) {
+    const { slide } = e.target.dataset;
+    goToSlide(slide);
+  }
+});
+activateDot(0);
+//* 使用鍵盤監聽事件操作slider
+document.addEventListener('keydown', function (e) {
+  if (e.keyCode === 39) nextSlide();
+  e.keyCode === 37 && prevSlide();
+  activateDot(curSlide);
+});
+
 //這三個特殊元素不需要在加選取器就能選到
 // documentElement 才是真正的整個頁面
 // console.log(document.documentElement);
