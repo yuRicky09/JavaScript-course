@@ -222,6 +222,34 @@ sectionAll.forEach(function (section) {
   section.classList.add('section--hidden');
 });
 
+//* lazy loading imagine
+//! 不是所有的img都要延遲載入， 只有帶有data-src屬性的img才是我們要的目標
+const imgTargets = document.querySelectorAll('img[data-src]');
+console.log(imgTargets);
+
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+
+  if (!entry.isIntersecting) return;
+  entry.target.src = entry.target.dataset.src;
+  //! 下面這樣寫不好是因為在換圖時也需要載入時間，今天如果user電腦慢，圖檔還沒順利載完時就把filter模糊屬性給先移掉的話的，就會先呈現畫質低的圖出來。
+  //! 所以正確做法是使用load event事件，等確定load完再移除屬性
+  // entry.target.classList.remove('lazy-img');
+  entry.target.addEventListener('load', function () {
+    this.classList.remove('lazy-img');
+  });
+
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px', // 我們也不希望被user知道我們使用lazy load 所以擴大觀察鏡頭視窗
+});
+
+imgTargets.forEach(img => imgObserver.observe(img));
 //這三個特殊元素不需要在加選取器就能選到
 // documentElement 才是真正的整個頁面
 // console.log(document.documentElement);

@@ -109,6 +109,7 @@ img {
   transition: filter 0.5s;
 }
 
+/*! 使用filter屬性的 blur設定值可以調整模糊度 */
 .lazy-img {
   filter: blur(20px);
 }
