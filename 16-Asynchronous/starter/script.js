@@ -48,28 +48,28 @@ const renderCountry = function (data, className = '') {
   countriesContainer.style.opacity = 1;
 };
 
-// AJAX call country 1
+AJAX call country 1
 const getCountryAndNeighbour = function (country) {
   const request = new XMLHttpRequest();
   request.open('GET', `https://restcountries.eu/rest/v2/name/${country}`);
   request.send();
 
-  // 你可能會想要在request.send()前加個變數去直接存放資料
-  // 但這是行不通的 因為資料可能還沒被fetch下來，所以我們要加個監聽事件當載完時執行後面的call back
+  你可能會想要在request.send()前加個變數去直接存放資料
+  但這是行不通的 因為資料可能還沒被fetch下來，所以我們要加個監聽事件當載完時執行後面的call back
   request.addEventListener('load', function () {
-    // console.log(this.responseText);
+    console.log(this.responseText);
     const [data] = JSON.parse(this.responseText);
     console.log(data);
 
-    // Render country 1
+    Render country 1
     renderCountry(data);
 
-    // Get neughbour Country
+    Get neughbour Country
     const [neighbour] = data.borders;
 
     if (!neighbour) return;
 
-    // AJAX call country 2
+    AJAX call country 2
     const request2 = new XMLHttpRequest();
     request2.open('GET', `https://restcountries.eu/rest/v2/alpha/${neighbour}`);
     request2.send();
@@ -82,17 +82,17 @@ const getCountryAndNeighbour = function (country) {
   });
 };
 
-//  你會發現有時候出現順序不一樣
-//  這是因為 我們監聽事件是用當讀取完畢時就做後面的call back所以先載完的會先執行
-// getCountryAndNeighbour('taiwan');
-// getCountryAndNeighbour('japan');
+你會發現有時候出現順序不一樣
+這是因為 我們監聽事件是用當讀取完畢時就做後面的call back所以先載完的會先執行
+getCountryAndNeighbour('taiwan');
+getCountryAndNeighbour('japan');
 getCountryAndNeighbour('usa');
 
 
-// const getCountryAndNeighbour = function (country) {
-//   const request = new XMLHttpRequest();
-//   request.open('GET', `https://restcountries.eu/rest/v2/name/${country}`);
-//   request.send();
+const getCountryAndNeighbour = function (country) {
+const request = new XMLHttpRequest();
+request.open('GET', `https://restcountries.eu/rest/v2/name/${country}`);
+request.send();
 */
 // 使用ES6 新增的fetch() API 來抓資料
 
