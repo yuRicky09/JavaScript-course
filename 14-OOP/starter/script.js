@@ -123,15 +123,15 @@ class PersonCl {
   }
 
   //! setter很常拿來當作設定驗證   例子:驗證有沒有輸拳名
-  set fullName(name) {
-    //!  下面這個_是慣例， 如果不加程式會衝突，因為會造成寫入再建構子寫入fullname屬性時會呼叫到這個setter fn,但這邊又寫一樣的話就會造成無窮迴圈
-    if (name.includes(' ')) this._fullName = name;
-    else alert(`Hey ${name} is not a full name`);
-  }
+  // set fullName(name) {
+  //!  下面這個_是慣例， 如果不加程式會衝突，因為會造成寫入再建構子寫入fullname屬性時會呼叫到這個setter fn,但這邊又寫一樣的話就會造成無窮迴圈
+  // if (name.includes(' ')) this._fullName = name;
+  // else alert(`Hey ${name} is not a full name`);
+  // }
 
-  get fullName() {
-    return this._fullName;
-  }
+  // get fullName() {
+  //   return this._fullName;
+  // }
   // 這樣做= PersonCl.hey = function () {
   //  console.log('hey! what up')
   //}
@@ -220,27 +220,125 @@ GOOD LUCK 😀
 // car2.brake();
 // car2.brake();
 
-class Car {
-  constructor(make, speed) {
-    this.make = make;
-    this.speed = speed;
-  }
+// class Car {
+//   constructor(make, speed) {
+//     this.make = make;
+//     this.speed = speed;
+//   }
 
-  accelerate = function () {
-    this.speed += 10;
-    console.log(`${this.make} going at ${this.speed} km/h`);
-  };
+//   accelerate = function () {
+//     this.speed += 10;
+//     console.log(`${this.make} going at ${this.speed} km/h`);
+//   };
 
-  brake = function () {
-    this.speed -= 5;
-    console.log(`${this.make} going at ${this.speed} km/h`);
-  };
+//   brake = function () {
+//     this.speed -= 5;
+//     console.log(`${this.make} going at ${this.speed} km/h`);
+//   };
 
-  get speedUS() {
-    return this.speed / 1.6;
-  }
+//   get speedUS() {
+//     return this.speed / 1.6;
+//   }
 
-  set speedUS(speed) {
-    this.speed = speed * 1.6;
-  }
-}
+//   set speedUS(speed) {
+//     this.speed = speed * 1.6;
+//   }
+// }
+
+//* 繼承
+
+const People = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+People.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  // DRY
+  // this.firstName = firstName;
+  // this.birthYear = birthYear;
+  //! 你可能會想這麼做，但這樣會噴錯，因為這只是正常呼叫一個fn this會是undefined(沒有用new 不會讓this指向這個obj)
+  //  People(firstName, birthYear)
+  //! 使用call method   fn.call(this要指定的對象,參數)
+  //! 因為使用new時會讓this指向這個新new出來的obj 所以這時帶this就等於我們要指向這個新的實體
+  People.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+Student.prototype = Object.create(People.prototype);
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.firstName}, and I stydy ${this.course}`);
+};
+
+const mike = new Student('Mike', 1994, 'Computer Sceience');
+mike.introduce();
+mike.calcAge();
+
+console.log(mike.__proto__);
+
+Student.prototype.constructor = Student;
+console.dir(Student.prototype.constructor);
+
+// Coding Challenge #3
+
+/* 
+1. Use a constructor function to implement an Electric Car (called EV) as a CHILD "class" of Car. Besides a make and current speed, the EV also has the current battery charge in % ('charge' property);
+2. Implement a 'chargeBattery' method which takes an argument 'chargeTo' and sets the battery charge to 'chargeTo';
+3. Implement an 'accelerate' method that will increase the car's speed by 20, and decrease the charge by 1%. Then log a message like this: 'Tesla going at 140 km/h, with a charge of 22%';
+4. Create an electric car object and experiment with calling 'accelerate', 'brake' and 'chargeBattery' (charge to 90%). Notice what happens when you 'accelerate'! HINT: Review the definiton of polymorphism 😉
+
+DATA CAR 1: 'Tesla' going at 120 km/h, with a charge of 23%
+
+GOOD LUCK 😀
+*/
+
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(`${this.make} is going at ${this.speed} km/h`);
+};
+
+Car.prototype.brake = function () {
+  this.speed -= 5;
+  console.log(`${this.make} is going at ${this.speed} km/h`);
+};
+
+const Ev = function (make, speed, charge) {
+  // this.make = make;
+  // this.speed = speed;
+  Car.call(this, make, speed);
+  this.charge = charge;
+};
+
+Ev.prototype = Object.create(Car.prototype);
+Ev.prototype.constructor = Ev;
+
+Ev.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+};
+
+Ev.prototype.accelerate = function () {
+  this.speed += 20;
+  this.charge -= 1;
+  console.log(
+    `${this.make} going at ${this.speed} km/h, with a charge of ${this.charge}%`
+  );
+};
+const tesla = new Ev('Tesla', 120, 23);
+
+tesla.accelerate();
+tesla.accelerate();
+tesla.accelerate();
+tesla.chargeBattery(90);
+tesla.brake();
+tesla.accelerate();
+
+console.log(tesla);

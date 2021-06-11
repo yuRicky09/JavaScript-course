@@ -101,7 +101,7 @@ request.send();
 const getCountryData = function (country) {
   fetch(`https://restcountries.eu/rest/v2/name/${country}`)
     .then(response =>
-      // 這邊要注意.json這個method也會回傳一個promise物件 所以我們要在用.then()去接如果resolve的值
+      // 這邊要注意.json這個method也會得到一個promise物件 所以我們要在用.then()去接如果resolve的值，這邊不用寫return是因為我們用箭頭函數
       response.json()
     )
     .then(data => {
