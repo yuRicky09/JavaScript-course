@@ -342,3 +342,154 @@ tesla.brake();
 tesla.accelerate();
 
 console.log(tesla);
+
+// 繼承 ES6 class
+
+class Animal {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  eat(food) {
+    console.log(`我想要吃${food}`);
+  }
+}
+
+class Cat extends Animal {
+  // 如果沒有要新增新的屬性的話 甚至連constructor都不用寫
+  constructor(name, age, color) {
+    //! super一定要寫在最前面 它會同時設定this
+    super(name, age);
+    this.color = color;
+  }
+
+  fly() {
+    console.log('誰說貓不能飛的?');
+  }
+}
+
+const kitty = new Cat('Kitty', 5, 'red');
+console.log(kitty);
+
+kitty.fly();
+kitty.eat('fish');
+
+// encapsulation 封裝
+
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    // 有些屬性它的初始值是固定的不需要參數帶入
+    this.movements = [];
+    this.locale = navigator.language;
+  }
+
+  //  Public interface 這些方法正是我們供使用者去用的(API)
+  deposit(val) {
+    this.movements.push(val);
+    return this;
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+    return this;
+  }
+
+  approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this.approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+    }
+    return this;
+  }
+
+  getMovements() {
+    return this.movements;
+  }
+}
+
+const acc1 = new Account('leo', 'TW', 1111);
+
+// 這種商業邏輯我們同常會寫成method 方便維護與理解
+// 存200
+// acc1.movements.push(200);
+// 提120
+// acc1.movements.push(-120);
+// console.log(acc1);
+
+// 這樣更符合邏輯 使用者更好操作
+acc1.deposit(200);
+acc1.withdraw(120);
+acc1.requestLoan(1000);
+console.log(acc1);
+
+// 想要chaining(串接) method的話 那就在所有method加上return this(這時的this就代表呼叫這個方法的obj)
+
+acc1.deposit(200).deposit(500).withdraw(250).requestLoan(40000).withdraw(20000);
+
+console.log(acc1.getMovements());
+
+// Coding Challenge #4
+
+/* 
+1. Re-create challenge #3, but this time using ES6 classes: create an 'EVCl' child class of the 'CarCl' class
+2. Make the 'charge' property private;
+3. Implement the ability to chain the 'accelerate' and 'chargeBattery' methods of this class, and also update the 'brake' method in the 'CarCl' class. They experiment with chining!
+
+DATA CAR 1: 'Rivian' going at 120 km/h, with a charge of 23%
+
+GOOD LUCK 😀
+*/
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(`${this.make} is going at ${this.speed} km/h`);
+    return this;
+  }
+
+  brake() {
+    this.speed -= 5;
+    console.log(`${this.make} is going at ${this.speed} km/h`);
+    return this;
+  }
+
+  get speedUS() {
+    return this.speed / 1.6;
+  }
+
+  set speedUS(speed) {
+    this.speed = speed * 1.6;
+  }
+}
+
+class EVCL extends CarCl {
+  #charge;
+
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+  }
+
+  chargeBattery(chargeTo) {
+    this.#charge = chargeTo;
+    return this;
+  }
+}
+
+const rivian = new EVCL('Rivian', 120, 23);
+console.log(rivian);
+rivian.accelerate().accelerate().brake().chargeBattery(90);
+console.log(rivian);
