@@ -19,6 +19,7 @@ class Workout {
   date = new Date();
   // 通常id都會是靠第三方libary產生 這邊為了方便自己寫
   id = (Date.now() + '').slice(-10);
+  clicks = 0;
   constructor(coords, distance, duration) {
     this.coords = coords;
     this.distance = distance; // in km
@@ -33,6 +34,10 @@ class Workout {
       months[this.date.getMonth()]
     } ${this.date.getDate()}`;
   }
+
+  // click() {
+  //   this.clicks++;
+  // }
 }
 
 class Running extends Workout {
@@ -81,13 +86,17 @@ const inputElevation = document.querySelector('.form__input--elevation');
 class App {
   // 將map mapEvent設為這個實體的私有屬性
   #map;
+  #mapZoomLevel = 13;
   #mapEvent;
-  #workout = [];
+  #workouts = [];
   constructor() {
     this._getPosition();
+
+    this._getLocalStorage();
     //! 注意 監聽事件時this會指向成被綁定監聽的DOM元素 所以這時的this會變成form,但我們希望_newWorkout這個fn的this一樣指向這個new出來的obj 所以我們一樣用bind
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
+    containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
   }
 
   _getPosition() {
@@ -109,7 +118,7 @@ class App {
     const coords = [latitude, longitude];
 
     //  L = leaflet的namespace 命名空間：規範程式的範圍，使同名的變數或名稱不會互相干擾  將變數都宣告在命名空間裡避免命名衝突; 使用這裡面的變數或函式需加前綴
-    this.#map = L.map('map').setView(coords, 13);
+    this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
 
     L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
       attribution:
@@ -117,6 +126,10 @@ class App {
     }).addTo(this.#map);
     //! 同上 監聽對象this指向問題
     this.#map.on('click', this._showForm.bind(this));
+
+    this.#workouts.forEach(workout => {
+      this._renderWorkoutMarker(workout);
+    });
   }
 
   _showForm(mapE) {
@@ -183,14 +196,16 @@ class App {
       workout = new Cycling([lat, lng], distance, duration, elevation);
     }
     // Add new workout to workout Array
-    this.#workout.push(workout);
-    console.log(this.#workout);
+    this.#workouts.push(workout);
+    console.log(this.#workouts);
     // Render workout on map as marker
     this._renderWorkoutMarker(workout);
     // Render workout on list
     this._renderWorkout(workout);
     // hide form + clear input fields
     this._hideForm();
+    // Set local storage to all workouts
+    this._setLocalStorage();
   }
 
   _renderWorkoutMarker(workout) {
@@ -213,7 +228,7 @@ class App {
 
   _renderWorkout(workout) {
     let html = `
-      <li class="workout workout--${workout.type}" data-id="${workout}">
+      <li class="workout workout--${workout.type}" data-id="${workout.id}">
         <h2 class="workout__title">${workout.description}</h2>
         <div class="workout__details">
           <span class="workout__icon">${
@@ -261,6 +276,45 @@ class App {
       `;
     }
     form.insertAdjacentHTML('afterend', html);
+  }
+
+  _moveToPopup(e) {
+    const workoutEl = e.target.closest('.workout');
+    console.log(workoutEl);
+
+    if (!workoutEl) return;
+    // find(callback條件) 會回傳陣列中符合條件的第一個元素
+    const workout = this.#workouts.find(
+      workout => workout.id === workoutEl.dataset.id
+    );
+
+    this.#map.setView(workout.coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+    });
+
+    // using the public interface
+    // workout.click();
+  }
+
+  _setLocalStorage() {
+    // setItme("key", "value") localstorage存資料的方法參數必須是一個key跟value 並且value必須是字串 我們可以用JSON.stringify把obj轉成json字串格式
+    localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+  }
+
+  _getLocalStorage() {
+    //  反向的 我們想把JSON字串儲存格式轉成JS obj的話我們使用JSON.parse
+    const data = JSON.parse(localStorage.getItem('workouts'));
+
+    if (!data) return;
+    // 這個fn是在很早的階段執行的 所以那時候的array應該會是empty狀態
+    this.#workouts = data;
+    this.#workouts.forEach(workout => {
+      console.log(this);
+      this._renderWorkout(workout);
+    });
   }
 }
 
