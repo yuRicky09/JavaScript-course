@@ -24,7 +24,7 @@ const renderCountry = function (data, className = '') {
   </article>
   `;
   countriesContainer.insertAdjacentHTML('afterbegin', html);
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 ///////////////////////////////////////
@@ -243,37 +243,37 @@ const getPosition = function () {
 
 // getPosition().then(pos => console.log(pos));
 
-const whereAmI = function () {
-  getPosition()
-    .then(position => {
-      console.log(position);
-      const { latitude: lat, longitude: lng } = position.coords;
-      return fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Problem with geocoding ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      const { city, country } = data;
-      console.log(`You are in ${city}, ${country}`);
+// const whereAmI = function () {
+//   getPosition()
+//     .then(position => {
+//       console.log(position);
+//       const { latitude: lat, longitude: lng } = position.coords;
+//       return fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+//     })
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error(`Problem with geocoding ${response.status}`);
+//       }
+//       return response.json();
+//     })
+//     .then(data => {
+//       const { city, country } = data;
+//       console.log(`You are in ${city}, ${country}`);
 
-      return fetch(`https://restcountries.eu/rest/v2/name/${country}`);
-    })
-    .then(res => res.json())
-    .then(data => renderCountry(data[0]))
-    .catch(err =>
-      console.error(`Get something wrong! ${err.message}.Please try again!`)
-    )
-    .finally(() => {
-      // 不管promise解果如何都會執行
-      countriesContainer.style.opacity = 1;
-    });
-};
+//       return fetch(`https://restcountries.eu/rest/v2/name/${country}`);
+//     })
+//     .then(res => res.json())
+//     .then(data => renderCountry(data[0]))
+//     .catch(err =>
+//       console.error(`Get something wrong! ${err.message}.Please try again!`)
+//     )
+//     .finally(() => {
+//       // 不管promise解果如何都會執行
+//       countriesContainer.style.opacity = 1;
+//     });
+// };
 
-btn.addEventListener('click', whereAmI);
+// btn.addEventListener('click', whereAmI);
 
 // Coding Challenge #2
 
@@ -297,12 +297,154 @@ PART 2
 TEST DATA: Images in the img folder. Test the error handler by passing a wrong image path. Set the network speed to 'Fast 3G' in the dev tools Network tab, otherwise images load too fast.
 
 GOOD LUCK 😀
+// */
+// const images = document.querySelector('.images');
+// let img;
+// const createImage = function (imgPath) {
+//   return new Promise(function (resolve, reject) {
+//     img = document.createElement('img');
+//     img.src = imgPath;
+//     img.addEventListener('load', function () {
+//       images.appendChild(img);
+//       resolve(img);
+//     });
+
+//     img.addEventListener('error', function () {
+//       reject(new Error('imgpath worng!'));
+//     });
+//   });
+// };
+
+// createImage('./img/img-1.jpg')
+//   .then(img => {
+//     return wait(2);
+//   })
+//   .then(() => {
+//     img.style.display = 'none';
+//     return createImage('./img/img-2.jpg');
+//   })
+//   .then(img => {
+//     return wait(2);
+//   })
+//   .then(() => {
+//     img.style.display = 'none';
+//   })
+//   .catch(err => console.error(err.message));
+
+//* Async/await
+//! Async/await 就是一個處理promise的語法糖衣(then)  讓你可以像在寫同步的方式處理非同步
+
+// fn前加上async告知要已非同步來處理
+const whereAmI = async function () {
+  try {
+    // Geolocation
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // Reverse geocoding
+    const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    if (!resGeo.ok) {
+      throw new Error(`get Problem`);
+    }
+    const dataGeo = await resGeo.json();
+    // await 顧名思義 會等待promise fulfill, fulfill後把它assing到變數中
+    const res = await fetch(
+      `https://restcountries.eu/rest/v2/name/${dataGeo.country}`
+    );
+    const data = await res.json();
+    renderCountry(data[0]);
+
+    return `You are in ${dataGeo.city}, ${dataGeo.country}`;
+  } catch (err) {
+    console.error(`${err}🧨`);
+    renderError(`${err.message}`);
+
+    // reject promise returned from async fn
+    //! async fn中 當發生error時 還是要手動拋出這個error
+    throw err;
+  }
+};
+
+console.log('1: Will get location');
+// async fn的return值永遠會是一個promise物件 所以我們要拿到我們想return值的話就要用.then處理
+whereAmI()
+  .then(city => console.log(`2: ${city}`))
+  .catch(err => console.error(`2: ${err.message}`))
+  .finally(() => console.log('3: Finsihed getting location'));
+
+// 不過上面這寫法還是不太好 新舊寫法混著
+//!但要改寫成全都用新寫法的話會有個難點是awiat只能在使用async關鍵字的fn內部來使用 所以為了處理whereAmI這fn後不能直接接上await 我們使用IIfE
+
+(async function () {
+  try {
+    const res = await whereAmI();
+    console.log(`2: ${res}`);
+  } catch (err) {
+    console.error(`2: ${err.message}`);
+  }
+  console.log('3: Finsihed getting location');
+})();
+
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    //* 這寫法看似沒問題但其實很不合理 這三個資料不應該是c1抓完再抓c2再抓c3 這三個彼此是沒牽連的 應要同時抓取
+    // const [data1] = await getJSON(
+    //   `https://restcountries.eu/rest/v2/name/${c1}`
+    // );
+    // const [data2] = await getJSON(
+    //   `https://restcountries.eu/rest/v2/name/${c2}`
+    // );
+    // const [data3] = await getJSON(
+    //   `https://restcountries.eu/rest/v2/name/${c3}`
+    // );
+    // console.log([data1.capital], [data2.capital], [data3.capital]);
+    //! Promsie.all() 使用時機為當有多個非同步操作 且這些非同步操作互相沒關聯不需有先後順序時可使用 不過要記住一個reject的話全都會被reject
+    // Promsie.all()的參數為array 且會回傳一個array
+    const data = Promise.all([
+      getJSON(`https://restcountries.eu/rest/v2/name/${c1}`),
+      getJSON(`https://restcountries.eu/rest/v2/name/${c2}`),
+      getJSON(`https://restcountries.eu/rest/v2/name/${c3}`),
+    ]);
+
+    console.log((await data).map(d => d[0].capital));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// get3Countries('taiwan', 'usa', 'canada');
+
+// Coding Challenge #3
+
+/* 
+PART 1
+Write an async function 'loadNPause' that recreates Coding Challenge #2, this time using async/await (only the part where the promise is consumed). Compare the two versions, think about the big differences, and see which one you like more.
+Don't forget to test the error handler, and to set the network speed to 'Fast 3G' in the dev tools Network tab.
+
+PART 2
+1. Create an async function 'loadAll' that receives an array of image paths 'imgArr';
+2. Use .map to loop over the array, to load all the images with the 'createImage' function (call the resulting array 'imgs')
+3. Check out the 'imgs' array in the console! Is it like you expected?
+4. Use a promise combinator function to actually get the images from the array 😉
+5. Add the 'parallel' class to all the images (it has some CSS styles).
+
+TEST DATA: ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']. To test, turn off the 'loadNPause' function.
+
+GOOD LUCK 😀
 */
+
 const images = document.querySelector('.images');
-let img;
 const createImage = function (imgPath) {
   return new Promise(function (resolve, reject) {
-    img = document.createElement('img');
+    const img = document.createElement('img');
     img.src = imgPath;
     img.addEventListener('load', function () {
       images.appendChild(img);
@@ -315,18 +457,57 @@ const createImage = function (imgPath) {
   });
 };
 
-createImage('./img/img-1.jpg')
-  .then(img => {
-    return wait(2);
-  })
-  .then(() => {
-    img.style.display = 'none';
-    return createImage('./img/img-2.jpg');
-  })
-  .then(img => {
-    return wait(2);
-  })
-  .then(() => {
-    img.style.display = 'none';
-  })
-  .catch(err => console.error(err.message));
+// createImage('./img/img-1.jpg')
+//   .then(img => {
+//     return wait(2);
+//   })
+//   .then(() => {
+//     img.style.display = 'none';
+//     return createImage('./img/img-2.jpg');
+//   })
+//   .then(img => {
+//     return wait(2);
+//   })
+//   .then(() => {
+//     img.style.display = 'none';
+//   })
+//   .catch(err => console.error(err.message));
+
+const loadNPause = async function () {
+  try {
+    const img1 = await createImage('./img/img-1.jpg');
+    await wait(2);
+    img1.style.display = 'none';
+    const img2 = await createImage('./img/img-2.jpg');
+    await wait(2);
+    img2.style.display = 'none';
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+// loadNPause();
+
+const imgArr = ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg'];
+
+const loadAll = async function (imgArr) {
+  try {
+    //! 記住async fn的回傳值必定會是promise物件, 如果我們自己寫return值，想要的return值會是再promise的fulfill值裡
+    const imgs = imgArr.map(img => createImage(img));
+    console.log(imgs);
+    //! Promise.all接受多個非同步作業的promise 並且會回傳一個array 假設所有的promise都成功 這個回傳的array就會是有所有成功promise的resolve值
+    //! 這邊不加await就不行了 因為我們希望是Promise.all內的所有非同步作業完成後回傳所有resolve值存到data裡，所以需要等待。 不然的話data不會是promise的resolve值
+    //! 沒await data = Promise {<pending>}  有await data = [img, img, img]
+    const data = await Promise.all(imgs);
+    console.log(data);
+    // parallel = 平行
+    data.forEach(data => {
+      console.log('123');
+      data.classList.add('parallel');
+    });
+  } catch (err) {
+    err.message;
+  }
+};
+
+loadAll(imgArr);
