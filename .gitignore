@@ -1,2 +1,5 @@
 # 忽略 node_modules 檔案
 node_modules
+
+#
+.parcel-cache
